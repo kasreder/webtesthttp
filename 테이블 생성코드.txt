@@ -1,0 +1,44 @@
+use new_db;
+
+CREATE TABLE `users` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `username` VARCHAR(50) NOT NULL,
+  `nickname` VARCHAR(100) NOT NULL,
+  `password` VARCHAR(255) NOT NULL, -- 비밀번호는 해싱하여 저장
+  `email` VARCHAR(100) NOT NULL,
+  `grade` ENUM('Bronze', 'Silver', 'Gold', 'Platinum') DEFAULT 'Bronze',
+  `authority` ENUM('READ', 'WRITE', 'ADMIN') DEFAULT 'READ',
+  `status` ENUM('Active', 'Inactive') DEFAULT 'Active',
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+   PRIMARY KEY (`id`),
+   UNIQUE (`nickname`)
+);
+
+CREATE TABLE `boards` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `bname` VARCHAR(50) NOT NULL, -- 게시판 이름
+  `category` ENUM('News', 'Announcement', 'Free', 'Experiment') NOT NULL, -- 게시판 카테고리
+   PRIMARY KEY (`id`),
+   UNIQUE (`title`)
+);
+
+CREATE TABLE `posts` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `user_id` INT NOT NULL, -- 작성자 ID (users 테이블의 외래키)
+    `board_id` INT NOT NULL, -- 어느 게시판에 속하는지 (boards 테이블의 외래키)
+    `title` VARCHAR(100) NOT NULL, 
+    `content` TEXT,
+    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+     PRIMARY KEY (`id`),
+     FOREIGN KEY (`user_id`) REFERENCES users(`id`),
+     FOREIGN KEY (`board_id`) REFERENCES boards(`id`)
+);
+
+CREATE TABLE comments (
+    `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    `user_id` INT UNSIGNED NOT NULL,
+    `post_id` INT UNSIGNED NOT NULL,
+    `parent_comment_id` INT UNSIGNED DEFAULT NULL ,
+    `content` TEXT NOT NULL ,
+    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP 
+);

@@ -1,0 +1,87 @@
+name: webtesthttp
+description: A new Flutter project.
+
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.1.4 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  go_router: 8.0.3
+  cupertino_icons: ^1.0.5
+  json_annotation: ^4.8.1
+  build_runner: ^2.4.1
+  http: ^1.1.0
+  data_table_2: ^2.5.8
+  web: ^0.1.4-beta
+  url_strategy: ^0.2.0
+  intl: ^0.17.0
+  provider: ^6.0.5
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  json_serializable: ^6.7.1
+  flutter_lints: ^2.0.1
+
+flutter:
+  uses-material-design: true
+  fonts:
+    - family: Noto Sans
+      fonts:
+        - asset: assets/fonts/notosans/NotoSans-Black.ttf
+          weight: 900
+        - asset: assets/fonts/notosans/NotoSans-ExtraBold.ttf
+          weight: 800
+        - asset: assets/fonts/notosans/NotoSans-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/notosans/NotoSans-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/notosans/NotoSans-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/notosans/NotoSans-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/notosans/NotoSans-Light.ttf
+          weight: 300
+        - asset: assets/fonts/notosans/NotoSans-ExtraLight.ttf
+          weight: 200
+        - asset: assets/fonts/notosans/NotoSans-Thin.ttf
+          weight: 100
+    - family: 을지로체
+      fonts:
+        - asset: assets/fonts/bm/BMEULJIROTTF.ttf
+    - family: Arial Round
+      fonts:
+        - asset: assets/fonts/ARLRDBD.TTF
+    - family: 호빵체
+      fonts:
+        - asset: assets/fonts/samlip/SLBasic.ttf
+          weight: 500
+        - asset: assets/fonts/samlip/SLOut.ttf
+          style: italic
+    - family: Nanum
+      fonts:
+        - asset: assets/fonts/nanum/NanumSquareRoundEB.ttf
+          weight: 900
+        - asset: assets/fonts/nanum/NanumSquareRoundEB.ttf
+          weight: 800
+        - asset: assets/fonts/nanum/NanumSquareRoundB.ttf
+          weight: 700
+        - asset: assets/fonts/nanum/NanumSquareRoundB.ttf
+          weight: 600
+        - asset: assets/fonts/nanum/NanumSquareRoundR.ttf
+          weight: 500
+        - asset: assets/fonts/nanum/NanumSquareRoundR.ttf
+          weight: 400
+        - asset: assets/fonts/nanum/NanumSquareRoundL.ttf
+          weight: 300
+        - asset: assets/fonts/nanum/NanumSquareRoundL.ttf
+          weight: 200
+        - asset: assets/fonts/nanum/NanumSquareRoundL.ttf
+          weight: 100
+
+

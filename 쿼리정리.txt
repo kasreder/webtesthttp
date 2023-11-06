@@ -1,0 +1,44 @@
+INSERT INTO users (username, nickname, password, email)
+VALUES
+('user107', '카메라101', 'password101', 'user2@example.com'),
+('user101', '카메라102', 'password102', 'user3@example.com'),
+('user104', '카메라103', 'password103', 'user4@example.com'),
+('user105', '카메라104', 'password104', 'user5@example.com'),
+('user106', '카메라105', 'password105', 'user6@example.com'),
+('user102', '카메라106', 'password106', 'user2@example.com'),
+('user103', '카메라107', 'password107', 'user3@example.com'),
+('user104', '카메라108', 'password108', 'user4@example.com'),
+('user105', '카메라109', 'password109', 'user5@example.com'),
+('user106', '카메라110', 'password110', 'user6@example.com'),
+('user102', '카메라111', 'password111', 'user2@example.com'),
+('user103', '카메라112', 'password112', 'user3@example.com'),
+('user104', '카메라113', 'password113', 'user4@example.com'),
+('user105', '카메라114', 'password114', 'user5@example.com'),
+('user106', '카메라115', 'password115', 'user6@example.com');
+
+
+INSERT INTO boards (bname, category)
+VALUES ('test','Free'),
+       ('bbbb','Free');
+
+
+-- 글 작성 (user10이 작성한 글)
+INSERT INTO `posts` (`user_id`, `board_id`, `title`, `content`)
+VALUES (
+    (SELECT `id` FROM `users` WHERE `username` = 'user10'),
+    1, -- 게시판 ID를 적절하게 설정
+    '제목 예시',
+    '내용 예시'
+);
+
+
+-- 더미 데이터 300개 생성
+INSERT INTO `posts` (`user_id`, `board_id`, `title`, `content`)
+SELECT
+    FLOOR(1 + (RAND() * 23)), -- 무작위로 사용자 ID 선택 (user2 ~ user7)
+    FLOOR(1 + (RAND() * 2)), -- 무작위로 게시판 ID 선택 (test 또는 bbbb)
+    CONCAT('핫이슈 제목', @row_number := @row_number + 1), -- 제목에 숫자 카운팅
+    LEFT(CONCAT('내용', @row_number, ':', REPEAT('한글 텍스트 ', 1)), 200) -- 내용에 숫자 카운팅
+FROM
+    (SELECT @row_number := 0) AS vars, -- @row_number 변수를 0으로 초기화
+    (SELECT * FROM `information_schema`.tables LIMIT 300) AS dummy;
