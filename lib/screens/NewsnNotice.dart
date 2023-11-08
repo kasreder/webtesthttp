@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:data_table_2/data_table_2.dart';
+// import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
@@ -82,7 +82,6 @@ class News extends StatefulWidget {
 class NewsState extends State<News> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   Future<List<BoardP>?>? _boardList;
-  final int _counter = 0;
   final now = DateTime.now();
   final int itemsPerPage = 20; // 페이지당 항목 수
   int totalItems = 0; // 전체 항목 수
@@ -351,7 +350,6 @@ class Notice extends StatefulWidget {
 class NoticeState extends State<Notice> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   Future<List<BoardP>?>? _boardList;
-  final int _counter = 0;
   final now = DateTime.now();
   final int itemsPerPage = 20; // 페이지당 항목 수
   int totalItems = 0; // 전체 항목 수
@@ -671,50 +669,58 @@ String formatDate(String dateFromMySQL) {
 
 /// The state for DetailsScreen
 class NoticeDetailsScreenState extends State<NoticeDetailsScreen> {
-  int _counter = 0;
-
   @override
   Widget build(BuildContext context) {
     final noticeData = Provider.of<NoticeProvider>(context).noticeData;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Details Screen - ${widget.label}'),
+        title: Text(widget.label),
       ),
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Text('Details for ${widget.label} - Counter: $_counter',
-                style: Theme.of(context).textTheme.titleLarge),
-            const Padding(padding: EdgeInsets.all(4)),
-            TextButton(
-              onPressed: () {
-                setState(() {
-                  _counter++;
-                });
-              },
-              child: const Text('Increment counter'),
+      body: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.fromLTRB(8,50,8,8),
+            child: Column(
+              children: [
+                Text(
+                  'Title: ${noticeData?.title}',
+                  style: Theme.of(context).textTheme.displayMedium,
+                ),
+              ],
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  Text('글번호: ${noticeData?.id ?? 'No ID'}'),
-                  Text('nickname: ${noticeData?.nickname ?? 'No nickname'}'),
-                  Text(
-                    formatDate(noticeData!.created_at),
-                  ),
-                ],
-              ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Row(
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.fromLTRB(8,0,8,0),
+                          child: Icon(Icons.add_chart,color: Colors.grey,),
+                        ),
+                        Text('NO: ${noticeData?.id}',style: const TextStyle(color: Colors.grey)),
+                      ],
+                    ),
+                    Text(noticeData?.nickname ?? 'No nickname',style: const TextStyle(color: Colors.grey)),
+                    Text(formatDate(noticeData!.created_at),style: const TextStyle(color: Colors.grey)
+                    ),
+                  ],
+                ),
+              ],
             ),
-            Text('Title: ${noticeData?.title ?? 'No Title'}'),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text('Content: ${noticeData?.content ?? 'No Content'}'),
-            ),
-          ],
-        ),
+          ),
+          // Text('Title: ${noticeData.title}'),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text('Content: ${noticeData.content}'),
+          ),
+        ],
       ),
       drawer: const BaseDrawer(),
     );

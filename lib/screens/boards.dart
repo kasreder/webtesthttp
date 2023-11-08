@@ -1,5 +1,4 @@
 import 'package:data_table_2/data_table_2.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -94,7 +93,7 @@ class _BoardsState extends State<Boards> {
                       return Center(
                         child: Text(
                           '${snapshot.error} occurred',
-                          style: TextStyle(fontSize: 18),
+                          style: const TextStyle(fontSize: 18),
                         ),
                       ); // if we got our data
                     } else if (snapshot.hasData) {

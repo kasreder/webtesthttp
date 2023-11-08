@@ -77,7 +77,7 @@ final goRouter = GoRouter(
                   routes: [
                     GoRoute(
                       path: 'noticeread',
-                      builder: (context, state) => const NoticeDetailsScreen(label: 'A아님감'),
+                      builder: (context, state) => const NoticeDetailsScreen(label: 'COSMOSX > 공지게시판'),
                     ),
                   ],
                 ),

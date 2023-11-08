@@ -58,17 +58,17 @@ class MyApp extends StatelessWidget {
           labelSmall: TextStyle(
               color: Colors.green, fontSize: 17, fontWeight: FontWeight.w500),
           headlineLarge: TextStyle(
-              color: Colors.blue, fontSize: 60, fontWeight: FontWeight.w500),
-          headlineMedium: TextStyle(
-              color: Colors.blue, fontSize: 50, fontWeight: FontWeight.w500),
-          headlineSmall: TextStyle(
               color: Colors.blue, fontSize: 40, fontWeight: FontWeight.w500),
+          headlineMedium: TextStyle(
+              color: Colors.blue, fontSize: 30, fontWeight: FontWeight.w500),
+          headlineSmall: TextStyle(
+              color: Colors.blue, fontSize: 20, fontWeight: FontWeight.w500),
           displayLarge: TextStyle(
-              color: Colors.black, fontSize: 60, fontWeight: FontWeight.w100),
+              color: Colors.black, fontSize: 40, fontWeight: FontWeight.w700),
           displayMedium: TextStyle(
-              color: Colors.black, fontSize: 50, fontWeight: FontWeight.w100),
+              color: Colors.black, fontSize: 25, fontWeight: FontWeight.w700),
           displaySmall: TextStyle(
-              color: Colors.black, fontSize: 40, fontWeight: FontWeight.w100),
+              color: Colors.black, fontSize: 20, fontWeight: FontWeight.w700),
         ),
       ),
     );

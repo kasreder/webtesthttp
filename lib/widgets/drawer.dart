@@ -21,10 +21,22 @@ class BaseDrawer extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: [
           const DrawerHeader(
-            child: Text('Drawer Header'),
             decoration: BoxDecoration(
               // color: Colors.deepPurpleAccent,
               color: Color(0xffce93d8),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Text('COSMOSX',style: TextStyle(fontSize: 25, fontWeight: FontWeight.w800),),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Icon(Icons.door_front_door_outlined),
+                    Text('Login',style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),),
+                  ],
+                ),
+              ],
             ),
           ),
           ExpansionTile(
