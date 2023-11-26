@@ -9,18 +9,12 @@ import 'screens/home.dart';
 import 'screens/login.dart';
 import 'widgets/navigation.dart';
 
-
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigator1Key = GlobalKey<NavigatorState>(debugLabel: 'Home');
 final _shellNavigator2Key = GlobalKey<NavigatorState>(debugLabel: '새소식');
 final _shellNavigator3Key = GlobalKey<NavigatorState>(debugLabel: '커뮤니티');
 final _shellNavigator4Key = GlobalKey<NavigatorState>(debugLabel: '설정');
 final _shellNavigator5Key = GlobalKey<NavigatorState>(debugLabel: '이바타');
-
-final _shellNavigatorAAKey = GlobalKey<NavigatorState>(debugLabel: 'shellAAAA');
-final _shellNavigatorBBKey = GlobalKey<NavigatorState>(debugLabel: 'shellBBBB');
-final _shellNavigatorCCKey = GlobalKey<NavigatorState>(debugLabel: 'shellCCC');
-final _shellNavigatorFFKey = GlobalKey<NavigatorState>(debugLabel: 'shellDDDDd');
 
 final goRouter = GoRouter(
   initialLocation: '/main',
@@ -77,7 +71,15 @@ final goRouter = GoRouter(
                   routes: [
                     GoRoute(
                       path: 'noticeread',
-                      builder: (context, state) => const NoticeDetailsScreen(label: 'COSMOSX > 공지게시판'),
+                      builder: (BuildContext context, GoRouterState state) {
+                        print('Current path: ${state.location}');
+                        print('Query parameters: ${state.queryParameters}');
+                        final id = state.queryParameters['itemIndex'];
+                        return NoticeDetailsScreen(
+                          label: 'COSMOSX > 공지게시판',
+                          itemIndex: id,
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -145,87 +147,7 @@ final goRouter = GoRouter(
         ),
       ],
     ),
-
-
-
-
-    // StatefulShellRoute.indexedStack(
-    //   builder: (context, state, navigationShell) {
-    //     return BaseDrawer(navigationShell: navigationShell, drawer: Drawer(),);
-    //   },
-    //   branches: [
-    //     StatefulShellBranch(
-    //       navigatorKey: _shellNavigatorAAKey,
-    //       routes: [
-    //         GoRoute(
-    //           path: '/a',
-    //           pageBuilder: (context, state) => const NoTransitionPage(
-    //             child: RootScreen(label: 'A인감', detailsPath: '/a/details'),
-    //           ),
-    //           routes: [
-    //             GoRoute(
-    //               path: 'details',
-    //               builder: (context, state) => const DetailsScreen(label: 'A아님감'),
-    //             ),
-    //           ],
-    //         ),
-    //       ],
-    //     ),
-    //     StatefulShellBranch(
-    //       navigatorKey: _shellNavigatorBBKey,
-    //       routes: [
-    //         // Shopping Cart
-    //         GoRoute(
-    //           path: '/b',
-    //           pageBuilder: (context, state) => const NoTransitionPage(
-    //             child: RootScreen(label: 'B', detailsPath: '/b/details'),
-    //           ),
-    //           routes: [
-    //             GoRoute(
-    //               path: 'details',
-    //               builder: (context, state) => const DetailsScreen(label: 'B'),
-    //             ),
-    //           ],
-    //         ),
-    //       ],
-    //     ),
-    //     StatefulShellBranch(
-    //       navigatorKey: _shellNavigatorCCKey,
-    //       routes: [
-    //         // Shopping Cart
-    //         GoRoute(
-    //           path: '/ccc',
-    //           pageBuilder: (context, state) => const NoTransitionPage(
-    //             child: RootScreen(label: 'ccc', detailsPath: '/ccc/details'),
-    //           ),
-    //           routes: [
-    //             GoRoute(
-    //               path: 'details',
-    //               builder: (context, state) => const DetailsScreen(label: 'B'),
-    //             ),
-    //           ],
-    //         ),
-    //       ],
-    //     ),
-    //     StatefulShellBranch(
-    //       navigatorKey: _shellNavigatorFFKey,
-    //       routes: [
-    //         // Shopping Cart
-    //         GoRoute(
-    //           path: '/FF',
-    //           pageBuilder: (context, state) => const NoTransitionPage(
-    //             child: Login(label: 'FF', detailsPath_a: '/FF/details',),
-    //           ),
-    //           routes: [
-    //             GoRoute(
-    //               path: 'details',
-    //               builder: (context, state) => const DetailsScreen(label: 'B'),
-    //             ),
-    //           ],
-    //         ),
-    //       ],
-    //     ),
-    //   ],
-    // ),
   ],
 );
+
+

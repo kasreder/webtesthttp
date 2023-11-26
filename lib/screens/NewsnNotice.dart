@@ -374,7 +374,7 @@ class NoticeState extends State<Notice> {
     }
   }
 
-  final String url = "http://192.168.35.126:8000/main/";
+  final String url = "https://terraforming.info/main/";
   Future<List<BoardP>> _getBoardList() async {
     final http.Response res = await http.get(Uri.parse(url));
     if (res.statusCode == 200) {
@@ -494,8 +494,10 @@ class NoticeState extends State<Notice> {
                                                           .nickname,
                                                       itemIndex: itemIndex,
                                                     ));
-                                                    context
-                                                        .go(widget.detailPath);
+                                                    // context
+                                                    //     .go(widget.detailPath);
+                                                    String newPath = '${widget.detailPath}?itemIndex=$itemIndex';
+                                                    context.go(newPath);
                                                   },
                                                   child: Align(
                                                     alignment:
@@ -643,13 +645,14 @@ class NoticeState extends State<Notice> {
 }
 
 class NoticeDetailsScreen extends StatefulWidget {
-  const NoticeDetailsScreen({
-    required this.label,
-    Key? key,
-  }) : super(key: key);
-
-  /// The label to display in the center of the screen.
   final String label;
+  final String? itemIndex;
+
+  const NoticeDetailsScreen({
+    Key? key,
+    required this.label,
+    this.itemIndex, // 옵셔널로 변경
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => NoticeDetailsScreenState();
