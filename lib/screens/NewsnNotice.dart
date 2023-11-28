@@ -368,7 +368,7 @@ class NoticeState extends State<Notice> {
     final Duration difference = now.difference(parsedDate);
 
     if (difference.inHours < 24) {
-      return '${difference.inHours}시간 전';
+      return '${difference.inHours}시간 전1';
     } else {
       return DateFormat('yy-MM-dd').format(parsedDate);
     }
