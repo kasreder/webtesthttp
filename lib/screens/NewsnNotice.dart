@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:html';
 import 'dart:math';
 
 // import 'package:data_table_2/data_table_2.dart';
@@ -656,74 +657,109 @@ class NoticeDetailsScreen extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() => NoticeDetailsScreenState();
-}
 
-String formatDate(String dateFromMySQL) {
-  final DateTime parsedDate = DateTime.parse(dateFromMySQL);
-  final DateTime now = DateTime.now();
-  final Duration difference = now.difference(parsedDate);
 
-  if (difference.inHours < 24) {
-    return '${difference.inHours}시간 전';
-  } else {
-    return DateFormat('yy-MM-dd').format(parsedDate);
-  }
 }
 
 /// The state for DetailsScreen
 class NoticeDetailsScreenState extends State<NoticeDetailsScreen> {
+  Future<NoticeData>? _newsList;
+
+  late String url;
+  Future<NoticeData> _getnews() async {
+    return NoticeData(title: "aaaa", content: "content", created_at: DateTime.now().toString(), nickname: "nickname", id: 0, itemIndex: 999);
+    // final http.Response res = await http.get(Uri.parse(url));
+    // if (res.statusCode == 200) {
+    //   final NoticeData result = NoticeData.fromJson(jsonDecode(res.body));
+    //   print(result.length);
+    //   return result;
+    // } else {
+    //   throw Exception('Failed to load boards');
+    // }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    print('initState aaaaa');
+    _newsList = _getnews();
+    url = "https://terraforming.info/main/${widget.itemIndex ?? Uri.base.queryParameters["itemIndex"]}";
+    print('initState initState $url');
+  }
+
+  String formatDate(String? dateFromMySQL) {
+    if (dateFromMySQL == null){
+      return"aa";
+    }
+    final DateTime parsedDate = DateTime.parse(dateFromMySQL);
+    final DateTime now = DateTime.now();
+    final Duration difference = now.difference(parsedDate);
+
+    if (difference.inHours < 24) {
+      return '${difference.inHours}시간 전';
+    } else {
+      return DateFormat('yy-MM-dd').format(parsedDate);
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
-    final noticeData = Provider.of<NoticeProvider>(context).noticeData;
 
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.label),
       ),
-      body: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.fromLTRB(8,50,8,8),
-            child: Column(
-              children: [
-                Text(
-                  'Title: ${noticeData?.title}',
-                  style: Theme.of(context).textTheme.displayMedium,
-                ),
-              ],
+      body: FutureBuilder(
+            future: _newsList,
+            builder: (context, snapshot) {
+            var noticeData = snapshot.data;
+
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.fromLTRB(8,50,8,8),
+              child: Column(
+                children: [
+                  Text(
+                    'Title: ${noticeData?.title}',
+                    style: Theme.of(context).textTheme.displayMedium,
+                  ),
+                ],
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Row(
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.fromLTRB(8,0,8,0),
-                          child: Icon(Icons.add_chart,color: Colors.grey,),
-                        ),
-                        Text('NO: ${noticeData?.id}',style: const TextStyle(color: Colors.grey)),
-                      ],
-                    ),
-                    Text(noticeData?.nickname ?? 'No nickname',style: const TextStyle(color: Colors.grey)),
-                    Text(formatDate(noticeData!.created_at),style: const TextStyle(color: Colors.grey)
-                    ),
-                  ],
-                ),
-              ],
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Row(
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.fromLTRB(8,0,8,0),
+                            child: Icon(Icons.add_chart,color: Colors.grey,),
+                          ),
+                          Text('NO: ${noticeData?.id}',style: const TextStyle(color: Colors.grey)),
+                        ],
+                      ),
+                      Text(noticeData?.nickname ?? 'No nickname',style: const TextStyle(color: Colors.grey)),
+                      Text(formatDate(noticeData?.created_at),style: const TextStyle(color: Colors.grey)
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-          // Text('Title: ${noticeData.title}'),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text('Content: ${noticeData.content}'),
-          ),
-        ],
+            // Text('Title: ${noticeData.title}'),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text('Content: ${noticeData?.content}'),
+            ),
+          ],
+        );}
       ),
       drawer: const BaseDrawer(),
     );
