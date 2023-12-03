@@ -107,7 +107,7 @@ class NewsState extends State<News> {
     }
   }
 
-  final String url = "http://192.168.35.126:8000/main/";
+  final String url = "http://192.168.35.126:80/main/";
   Future<List<BoardP>> _getBoardList() async {
     final http.Response res = await http.get(Uri.parse(url));
     if (res.statusCode == 200) {
@@ -666,16 +666,18 @@ class NoticeDetailsScreenState extends State<NoticeDetailsScreen> {
   Future<NoticeData>? _newsList;
 
   late String url;
+
+
+
   Future<NoticeData> _getnews() async {
-    return NoticeData(title: "aaaa", content: "content", created_at: DateTime.now().toString(), nickname: "nickname", id: 0, itemIndex: 999);
-    // final http.Response res = await http.get(Uri.parse(url));
-    // if (res.statusCode == 200) {
-    //   final NoticeData result = NoticeData.fromJson(jsonDecode(res.body));
-    //   print(result.length);
-    //   return result;
-    // } else {
-    //   throw Exception('Failed to load boards');
-    // }
+    // return NoticeData(title: "aaaa", content: "content", created_at: DateTime.now().toString(), nickname: "nickname", id: 0, itemIndex: 999);
+    final http.Response res = await http.get(Uri.parse(url));
+    if (res.statusCode == 200) {
+      final NoticeData result = NoticeData.fromJson(jsonDecode(res.body));
+      return result;
+    } else {
+      throw Exception('Failed to load boards');
+    }
   }
 
   @override
