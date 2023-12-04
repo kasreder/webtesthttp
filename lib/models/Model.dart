@@ -1,3 +1,7 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'Model.g.dart';
+
 class NoticeData {
   String title;
   String content;
@@ -14,17 +18,20 @@ class NoticeData {
     required this.id,
     required this.itemIndex,
   });
+}
 
-  // JSON을 Dart 객체로 변환하는 fromJson 메서드를 추가합니다.
-  static NoticeData fromJson(Map<String, dynamic> json) {
-    return NoticeData(
-      title: json['title'],
-      content: json['content'],
-      created_at: json['created_at'],
-      nickname: json['nickname'],
-      id: json['id'],
-      itemIndex: json['itemIndex'],
-    );
-  }
+@JsonSerializable()
+class Model {
+  /// The generated code assumes these values exist in JSON.
+  final String title, content, created_at, nickname;
+  final int id;
 
+  Model({required this.title, required this.content, required this.id, required this.nickname, required this.created_at});
+
+  /// Connect the generated [_$PersonFromJson] function to the `fromJson`
+  /// factory.
+  factory Model.fromJson(Map<String, dynamic> json) => _$ModelFromJson(json);
+
+  /// Connect the generated [_$PersonToJson] function to the `toJson` method.
+  Map<String, dynamic> toJson() => _$ModelToJson(this);
 }

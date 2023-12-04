@@ -383,7 +383,7 @@ class NoticeState extends State<Notice> {
           .map<BoardP>((data) => BoardP.fromJson(data))
           .toList();
       totalItems = result.length;
-      print(result.length);
+      print(result[0]);
       return result;
     } else {
       throw Exception('Failed to load boards');
@@ -663,17 +663,16 @@ class NoticeDetailsScreen extends StatefulWidget {
 
 /// The state for DetailsScreen
 class NoticeDetailsScreenState extends State<NoticeDetailsScreen> {
-  Future<NoticeData>? _newsList;
+  Future<Model>? _newsList;
 
   late String url;
 
-
-
-  Future<NoticeData> _getnews() async {
+  Future<Model> _getnews() async {
     // return NoticeData(title: "aaaa", content: "content", created_at: DateTime.now().toString(), nickname: "nickname", id: 0, itemIndex: 999);
+    url = "https://terraforming.info/main/${widget.itemIndex ?? Uri.base.queryParameters["itemIndex"]}";
     final http.Response res = await http.get(Uri.parse(url));
     if (res.statusCode == 200) {
-      final NoticeData result = NoticeData.fromJson(jsonDecode(res.body));
+      final Model result = Model.fromJson(jsonDecode(res.body));
       return result;
     } else {
       throw Exception('Failed to load boards');
@@ -685,7 +684,7 @@ class NoticeDetailsScreenState extends State<NoticeDetailsScreen> {
     super.initState();
     print('initState aaaaa');
     _newsList = _getnews();
-    url = "https://terraforming.info/main/${widget.itemIndex ?? Uri.base.queryParameters["itemIndex"]}";
+    // url = "https://terraforming.info/main/${widget.itemIndex ?? Uri.base.queryParameters["itemIndex"]}";
     print('initState initState $url');
   }
 
