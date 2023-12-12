@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-import '../models/BoardPaser.dart';
+import '../../models/BoardPaser.dart';
 import '../widgets/appbar.dart';
 import '../widgets/drawer.dart';
 

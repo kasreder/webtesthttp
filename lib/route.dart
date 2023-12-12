@@ -2,12 +2,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
+import 'package:webtesthttp/view/screens/NewsnNotice.dart';
+import 'package:webtesthttp/view/screens/boards.dart';
+import 'package:webtesthttp/view/screens/home.dart';
+import 'package:webtesthttp/view/screens/login.dart';
+import 'package:webtesthttp/view/widgets/navigation.dart';
 
-import 'screens/NewsnNotice.dart';
-import 'screens/boards.dart';
-import 'screens/home.dart';
-import 'screens/login.dart';
-import 'widgets/navigation.dart';
+
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigator1Key = GlobalKey<NavigatorState>(debugLabel: 'Home');
