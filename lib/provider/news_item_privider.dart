@@ -8,7 +8,7 @@ class NewsProvider extends ChangeNotifier {
   NewsProvider(this.boardP);
 
   changeTitle() {
-    boardP = BoardP(title: boardP.title + "1",
+    boardP = BoardP(title: boardP.title,
         content: boardP.content,
         id: boardP.id,
         nickname: boardP.nickname,
