@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 
-import 'screens/NewsnNotice.dart';
+import 'screens/news_notice_screen.dart';
 import 'screens/boards.dart';
 import 'screens/home.dart';
 import 'screens/login.dart';
@@ -56,7 +56,7 @@ final goRouter = GoRouter(
             GoRoute(
               path: '/nwn',
               pageBuilder: (context, state) => const NoTransitionPage(
-                child: NwN(label: 'nwn', detailsPath: '/nwn/news',),
+                child: NewsNoticeMain(label: 'nwn', detailsPath: '/nwn/news',),
               ),
               routes: [
                 GoRoute(

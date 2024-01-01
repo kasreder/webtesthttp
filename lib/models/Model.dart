@@ -19,7 +19,7 @@ class NoticeData {
     required this.itemIndex,
   });
 }
-
+//
 @JsonSerializable()
 class Model {
   /// The generated code assumes these values exist in JSON.

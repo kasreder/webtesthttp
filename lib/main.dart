@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 // import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:url_strategy/url_strategy.dart';
-import 'package:webtesthttp/provider/noticeModel.dart';
-import 'package:webtesthttp/route.dart';
+import 'package:refltter/provider/noticeModel.dart';
+import 'package:refltter/route.dart';
 import 'package:provider/provider.dart';
 
 void main() {
