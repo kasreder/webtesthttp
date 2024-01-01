@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../models/BoardP.dart';
 import '../models/Model.dart';
 
 // class NoticeProvider with ChangeNotifier {
