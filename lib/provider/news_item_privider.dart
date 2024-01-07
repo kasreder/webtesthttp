@@ -1,6 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
-import 'package:webtesthttp/models/BoardP.dart';
+import '../models/BoardP.dart';
+
 
 class NewsProvider extends ChangeNotifier {
   BoardP boardP;

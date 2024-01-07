@@ -2,21 +2,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
-import 'package:webtesthttp/view/screens/NewsnNotice.dart';
-import 'package:webtesthttp/view/screens/boards.dart';
-import 'package:webtesthttp/view/screens/home.dart';
-import 'package:webtesthttp/view/screens/login.dart';
-import 'package:webtesthttp/view/widgets/navigation.dart';
-
-
-<<<<<<< HEAD
-import 'screens/news_notice_screen.dart';
-import 'screens/boards.dart';
-import 'screens/home.dart';
-import 'screens/login.dart';
-import 'widgets/navigation.dart';
-=======
->>>>>>> bc2f9497658c0f18211f152d3fb3c36f2d97773d
+import 'package:refltter/view/screens/boards.dart';
+import 'package:refltter/view/screens/home.dart';
+import 'package:refltter/view/screens/login.dart';
+import 'package:refltter/view/screens/news_notice_screen.dart';
+import 'package:refltter/view/widgets/navigation.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigator1Key = GlobalKey<NavigatorState>(debugLabel: 'Home');
@@ -26,7 +16,7 @@ final _shellNavigator4Key = GlobalKey<NavigatorState>(debugLabel: '설정');
 final _shellNavigator5Key = GlobalKey<NavigatorState>(debugLabel: '이바타');
 
 final goRouter = GoRouter(
-  initialLocation: '/main',
+  initialLocation: '/',
   // * Passing a navigatorKey causes an issue on hot reload:
   // * https://github.com/flutter/flutter/issues/113757#issuecomment-1518421380
   // * However it's still necessary otherwise the navigator pops back to
@@ -45,7 +35,7 @@ final goRouter = GoRouter(
           navigatorKey: _shellNavigator1Key,
           routes: [
             GoRoute(
-              path: '/main',
+              path: '/',
               pageBuilder: (context, state) => const NoTransitionPage(
                 child: RootScreen(label: 'COSMOSX 월컴', detailsPath: '/main/details'),
               ),
@@ -64,8 +54,14 @@ final goRouter = GoRouter(
             // Shopping Cart
             GoRoute(
               path: '/nwn',
+              redirect: (context,state) {
+                if (state.location  == '/nwn') {
+                  return '/nwn/news';
+                }
+                return null;
+              },
               pageBuilder: (context, state) => const NoTransitionPage(
-                child: NewsNoticeMain(label: 'nwn', detailsPath: '/nwn/news',),
+                child: NewsNoticeMain(label: 'nwn', detailsPath: '/nwn/news'),
               ),
               routes: [
                 GoRoute(

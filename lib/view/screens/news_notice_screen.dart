@@ -10,12 +10,12 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../models/BoardP.dart';
-import '../models/CommentP.dart';
-import '../models/Model.dart';
-import '../models/PostWithComments.dart';
-import '../provider/noticeModel.dart';
-import '../util/date_util.dart';
+import '../../models/BoardP.dart';
+import '../../models/CommentP.dart';
+import '../../models/Model.dart';
+import '../../models/PostWithComments.dart';
+import '../../util/date_util.dart';
+import '../../util/responsive_width.dart';
 import '../widgets/appbar.dart';
 import '../widgets/drawer.dart';
 
@@ -54,10 +54,7 @@ class NewsNoticeMainState extends State<NewsNoticeMain> {
           children: <Widget>[
             Text('Screen ${widget.label}', style: Theme.of(context).textTheme.titleLarge),
             const Padding(padding: EdgeInsets.all(4)),
-            TextButton(
-              onPressed: () => context.go(widget.detailsPath),
-              child: const Text('갈수 있어 details 돌리기전???11111'),
-            ),
+            const Text('정해져있는 페이지로 자동 이동합니다'),
           ],
         ),
       ),
@@ -113,23 +110,27 @@ class NewsState extends State<News> {
 
   @override
   Widget build(BuildContext context) {
-    final deviceWidth = MediaQuery.of(context).size.width;
+    final deviceWidth = ResponsiveWidth.getResponsiveWidth(context);
     print('width★★★★ : ${MediaQuery.of(context).size.width}');
     int startPage = max(0, currentPage - 2);
     int endPage = min((totalItems / itemsPerPage).ceil(), currentPage + 2);
     return Scaffold(
       appBar: BaseAppBar(
-        title: "커뮤니티",
+        title: "새소식(뉴스)",
         appBar: AppBar(),
       ),
       //라우팅쪽 label
       body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            buildNewsExpanded(deviceWidth),
-            buildNewsRow(startPage, endPage),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(0, 20, 0, 8),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              const Text("업계동향, 신기술, 기사"),
+              buildNewsExpanded(deviceWidth),
+              buildNewsRow(startPage, endPage),
+            ],
+          ),
         ),
       ),
       drawer: const BaseDrawer(),
@@ -139,113 +140,116 @@ class NewsState extends State<News> {
 
   Expanded buildNewsExpanded(double deviceWidth) {
     return Expanded(
-      child: FutureBuilder(
-        future: _boardList,
-        builder: (context, snapshot) {
-          var newsDate = snapshot.data;
-          if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot.hasError) {
-              return Center(
-                child: Text(
-                  '${snapshot.error} occurred',
-                  style: TextStyle(fontSize: 18),
-                ),
-              ); // if we got our data
-            } else if (snapshot.hasData && snapshot.data != null) {
-              print('FutureBuilder FutureBuilder');
-              return ListView.separated(
-                primary: false,
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                // itemCount: snapshot.data!.length,
-                itemCount: min(itemsPerPage, snapshot.data!.length - currentPage * itemsPerPage),
-                itemBuilder: (BuildContext context, int index) {
-                  int itemIndex =
-                      (snapshot.data!.length - 1) - (currentPage * itemsPerPage + index); // 내림차순으로 항목의 실제 인덱스 계산
-                  return Container(
-                    padding: const EdgeInsets.all(1),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                  "${newsDate![itemIndex].id} ",
-                                  style: Theme.of(context).textTheme.titleSmall,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      SizedBox(
-                                        width: deviceWidth * 0.8,
-                                        child: Text(
-                                          "${newsDate![itemIndex].title} ",
-                                          overflow: TextOverflow.fade,
-                                          maxLines: 1,
-                                          softWrap: false,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: deviceWidth * 0.7,
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: <Widget>[
-                                            Text(
-                                              // "${snapshot.data![index].created_at}",
-                                              DateUtil.formatDate(newsDate![itemIndex].created_at),
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .labelSmall!
-                                                  .copyWith(color: Colors.black54),
-                                            ),
-                                            Text(
-                                              newsDate![itemIndex].nickname,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .labelSmall!
-                                                  .copyWith(color: Colors.black54),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(0, 20, 0, 8),
+        child: FutureBuilder(
+          future: _boardList,
+          builder: (context, snapshot) {
+            var newsDate = snapshot.data;
+            if (snapshot.connectionState == ConnectionState.done) {
+              if (snapshot.hasError) {
+                return Center(
+                  child: Text(
+                    '${snapshot.error} occurred',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                ); // if we got our data
+              } else if (snapshot.hasData && snapshot.data != null) {
+                print('FutureBuilder FutureBuilder');
+                return ListView.separated(
+                  primary: false,
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  // itemCount: snapshot.data!.length,
+                  itemCount: min(itemsPerPage, snapshot.data!.length - currentPage * itemsPerPage),
+                  itemBuilder: (BuildContext context, int index) {
+                    int itemIndex =
+                        (snapshot.data!.length - 1) - (currentPage * itemsPerPage + index); // 내림차순으로 항목의 실제 인덱스 계산
+                    return Container(
+                      padding: const EdgeInsets.all(1),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(
+                                    "${newsDate![itemIndex].id} ",
+                                    style: Theme.of(context).textTheme.titleSmall,
                                   ),
-                                ),
-                              ],
-                            ),
-                            Column(
-                              children: <Widget>[
-                                SizedBox(
-                                  width: deviceWidth * 0.1,
-                                  child: Text(
-                                    "사진",
-                                    style: Theme.of(context).textTheme.labelSmall!.copyWith(color: Colors.black54),
+                                  Padding(
+                                    padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        SizedBox(
+                                          width: deviceWidth * 0.8,
+                                          child: Text(
+                                            "${newsDate![itemIndex].title} ",
+                                            overflow: TextOverflow.fade,
+                                            maxLines: 1,
+                                            softWrap: false,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: deviceWidth * 0.7,
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: <Widget>[
+                                              Text(
+                                                // "${snapshot.data![index].created_at}",
+                                                DateUtil.formatDate(newsDate![itemIndex].created_at),
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .labelSmall!
+                                                    .copyWith(color: Colors.black54),
+                                              ),
+                                              Text(
+                                                newsDate![itemIndex].nickname,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .labelSmall!
+                                                    .copyWith(color: Colors.black54),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  );
-                },
-                separatorBuilder: (BuildContext context, int index) => const Divider(),
-              );
+                                ],
+                              ),
+                              Column(
+                                children: <Widget>[
+                                  SizedBox(
+                                    width: deviceWidth * 0.1,
+                                    child: Text(
+                                      "사진",
+                                      style: Theme.of(context).textTheme.labelSmall!.copyWith(color: Colors.black54),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  separatorBuilder: (BuildContext context, int index) => const Divider(),
+                );
+              }
             }
-          }
-          return const Center(
-            child: CircularProgressIndicator(
-              strokeWidth: 10,
-            ),
-          );
-        },
+            return const Center(
+              child: CircularProgressIndicator(
+                strokeWidth: 10,
+              ),
+            );
+          },
+        ),
       ),
     );
   }
@@ -259,10 +263,10 @@ class NewsState extends State<News> {
           onPressed: currentPage == 0
               ? null
               : () {
-                  setState(() {
-                    currentPage--;
-                  });
-                },
+            setState(() {
+              currentPage--;
+            });
+          },
         ),
         for (int i = startPage; i < endPage; i++)
           Padding(
@@ -292,10 +296,10 @@ class NewsState extends State<News> {
           onPressed: currentPage == (totalItems / itemsPerPage).ceil() - 1
               ? null
               : () {
-                  setState(() {
-                    currentPage++;
-                  });
-                },
+            setState(() {
+              currentPage++;
+            });
+          },
         ),
       ],
     );
@@ -350,23 +354,27 @@ class NoticeState extends State<Notice> {
 
   @override
   Widget build(BuildContext context) {
-    final deviceWidth = MediaQuery.of(context).size.width;
-    print('width★★★★ : ${MediaQuery.of(context).size.width}');
+    final deviceWidth = ResponsiveWidth.getResponsiveWidth(context);
+    print('width★★★★ : ${ResponsiveWidth.getResponsiveWidth(context)}');
     int startPage = max(0, currentPage - 2);
     int endPage = min((totalItems / itemsPerPage).ceil(), currentPage + 2);
     return Scaffold(
       appBar: BaseAppBar(
-        title: "커뮤니티",
+        title: "새소식(공지사항)",
         appBar: AppBar(),
       ),
       //라우팅쪽 label
       body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            buildNoticeExpanded(deviceWidth),
-            buildNoticeRow(startPage, endPage),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(0, 20, 0, 8),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              const Text("홈페이지 관련소식, 제휴 및 기타 공지"),
+              buildNoticeExpanded(deviceWidth),
+              buildNoticeRow(startPage, endPage),
+            ],
+          ),
         ),
       ),
       drawer: const BaseDrawer(),
@@ -424,7 +432,7 @@ class NoticeState extends State<Notice> {
                                         width: deviceWidth * 0.8,
                                         child: InkWell(
                                           onTap: () {
-                                            String newPath = '${widget.detailPath}?itemIndex=$itemIndex';
+                                            String newPath = '${widget.detailPath}?itemIndex=${itemIndex+1}';
                                             context.go(newPath);
                                           },
                                           child: Align(
@@ -507,10 +515,10 @@ class NoticeState extends State<Notice> {
           onPressed: currentPage == 0
               ? null
               : () {
-                  setState(() {
-                    currentPage--;
-                  });
-                },
+            setState(() {
+              currentPage--;
+            });
+          },
         ),
         for (int i = startPage; i < endPage; i++)
           Padding(
@@ -540,10 +548,10 @@ class NoticeState extends State<Notice> {
           onPressed: currentPage == (totalItems / itemsPerPage).ceil() - 1
               ? null
               : () {
-                  setState(() {
-                    currentPage++;
-                  });
-                },
+            setState(() {
+              currentPage++;
+            });
+          },
         ),
       ],
     );
@@ -654,7 +662,7 @@ class NoticeDetailsScreenState extends State<NoticeDetailsScreen> {
                 ),
               );
             }
-            if  (!snapshot.hasData || snapshot.data == null) {
+            if (!snapshot.hasData || snapshot.data == null) {
               return const Center(child: Text('No data available'));
             }
             var noticeData = snapshot.data?.post;
@@ -667,7 +675,7 @@ class NoticeDetailsScreenState extends State<NoticeDetailsScreen> {
                   child: Column(
                     children: [
                       Text(
-                        'Title: ${noticeData?.title}',
+                        noticeData!.title,
                         style: Theme.of(context).textTheme.displayMedium,
                       ),
                       Padding(
@@ -682,7 +690,7 @@ class NoticeDetailsScreenState extends State<NoticeDetailsScreen> {
                                     Row(
                                       children: [
                                         const Padding(
-                                          padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
+                                          padding: EdgeInsets.fromLTRB(8, 10, 8, 10),
                                           child: Icon(
                                             Icons.add_chart,
                                             color: Colors.grey,
@@ -691,22 +699,32 @@ class NoticeDetailsScreenState extends State<NoticeDetailsScreen> {
                                         Text('NO: ${noticeData?.id}', style: const TextStyle(color: Colors.grey)),
                                       ],
                                     ),
-                                    Text(noticeData?.nickname ?? 'No nickname', style: const TextStyle(color: Colors.grey)),
-                                    Text(DateUtil.formatDate(noticeData!.created_at), style: const TextStyle(color: Colors.grey)),
+                                    Text(noticeData?.nickname ?? 'No nickname',
+                                        style: const TextStyle(color: Colors.grey)),
+                                    Text(DateUtil.formatDate(noticeData!.created_at),
+                                        style: const TextStyle(color: Colors.grey)),
                                   ],
                                 ),
                                 SizedBox(
-                                  width: MediaQuery.of(context).size.width * 0.55,
+                                    width: ResponsiveWidth.getResponsiveWidth(context),
+                                    child: const Divider(color: Colors.black54, thickness: 0.3)),
+                                SizedBox(
+                                  width: ResponsiveWidth.getResponsiveWidth(context),
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
-                                    child: Text(noticeData!.content),
+                                    child: Text(
+                                      noticeData!.content,
+                                      style: const TextStyle(
+                                        height: 1.5, // 줄 간격을 글자 크기의 1.5배로 설정
+                                      ),
+                                    ),
                                   ),
                                 ),
                                 SizedBox(
-                                    width: MediaQuery.of(context).size.width * 0.55,
-                                    child: const Divider(color: Colors.black54, thickness: 2.0)),
+                                    width: ResponsiveWidth.getResponsiveWidth(context),
+                                    child: const Divider(color: Colors.black54, thickness: 0.3)),
                                 SizedBox(
-                                  width: MediaQuery.of(context).size.width * 0.55,
+                                  width: ResponsiveWidth.getResponsiveWidth(context),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: <Widget>[
@@ -775,28 +793,38 @@ class _buildCommentList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min, // 자식 크기에 맞춤
-      children: commentData.map((comment) => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+      children: commentData
+          .map((comment) => Padding(
+        padding: const EdgeInsets.fromLTRB(50, 4, 0, 4),
         child: SizedBox(
-          width: MediaQuery.of(context).size.width * 0.55,
+          width: ResponsiveWidth.getResponsiveWidth(context),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 children: [
-                  const Icon(Icons.comment, color: Colors.grey),
-                  const SizedBox(width: 8),
-                  Text(comment.comment_author_nickname ?? 'No nickname', style: TextStyle(color: Colors.grey)),
+                  const Icon(Icons.subdirectory_arrow_left_outlined, color: Colors.grey, size: 15),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(comment.comment_author_nickname ?? 'No nickname',
+                        style: TextStyle(color: Colors.grey, fontSize: 15)),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(DateUtil.formatDate(comment.comment_created_at),
+                        style: TextStyle(color: Colors.grey, fontSize: 15)),
+                  ),
                 ],
               ),
-              const SizedBox(height: 4),
-              Text(comment.comment_content),
-              const SizedBox(height: 4),
-              Text(DateUtil.formatDate(comment.comment_created_at), style: TextStyle(color: Colors.grey, fontSize: 12)),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
+                child: Text(comment.comment_content),
+              ),
             ],
           ),
         ),
-      )).toList(),
+      ))
+          .toList(),
     );
   }
 }

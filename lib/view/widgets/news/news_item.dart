@@ -8,7 +8,7 @@ import '../../../models/Model.dart';
 import '../../../provider/news_item_privider.dart';
 import '../../../provider/noticeModel.dart';
 import '../../../util/date_util.dart';
-import '../../screens/NewsnNotice.dart';
+import '../../screens/news_notice_screen.dart';
 
 class NewsItem extends StatefulWidget {
   const NewsItem({
