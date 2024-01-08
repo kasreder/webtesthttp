@@ -7,8 +7,10 @@ class DateUtil {
     final DateTime now = DateTime.now();
     final Duration difference = now.difference(parsedDate);
 
-    if (difference.inHours < 24) {
-      return '${difference.inHours}시간 전11';
+    if (difference.inMinutes < 360) {
+      return '${difference.inMinutes}분 전';
+    } else if (difference.inHours < 6) {
+      return '${difference.inHours}시간 전';
     } else {
       return DateFormat('yy-MM-dd').format(parsedDate);
     }

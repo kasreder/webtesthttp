@@ -57,7 +57,7 @@ class _LoginState extends State<Login> {
                 onPressed: () {
                   // 로그인 처리
                 },
-                child: Text('로그인'),
+                child: const Text('로그인'),
               ),
             ),
             // 소셜 로그인 버튼
@@ -71,7 +71,7 @@ class _LoginState extends State<Login> {
                     onPressed: () {
                       // 구글 로그인 처리
                     },
-                    child: Text('구글'),
+                    child: const Text('구글'),
                   ),
                 ),
                 // 네이버 로그인 버튼
@@ -81,7 +81,7 @@ class _LoginState extends State<Login> {
                     onPressed: () {
                       // 네이버 로그인 처리
                     },
-                    child: Text('네이버'),
+                    child: const Text('네이버'),
                   ),
                 ),
                 // 카카오톡 로그인 버튼
@@ -91,7 +91,7 @@ class _LoginState extends State<Login> {
                     onPressed: () {
                       // 카카오톡 로그인 처리
                     },
-                    child: Text('카카오톡'),
+                    child: const Text('카카오톡'),
                   ),
                 ),
               ],
@@ -103,7 +103,7 @@ class _LoginState extends State<Login> {
                 onPressed: () {
                   // 비밀번호 찾기 페이지로 이동
                 },
-                child: Text('비밀번호 찾기'),
+                child: const Text('비밀번호 찾기'),
               ),
             ),
             // Text('LoginLoginLoginLoginLoginLogin $label',

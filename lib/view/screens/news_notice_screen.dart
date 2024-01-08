@@ -151,7 +151,7 @@ class NewsState extends State<News> {
                 return Center(
                   child: Text(
                     '${snapshot.error} occurred',
-                    style: TextStyle(fontSize: 18),
+                    style: const TextStyle(fontSize: 18),
                   ),
                 ); // if we got our data
               } else if (snapshot.hasData && snapshot.data != null) {
@@ -385,122 +385,125 @@ class NoticeState extends State<Notice> {
   //하단 작성글 보는 리스트
   Expanded buildNoticeExpanded(double deviceWidth) {
     return Expanded(
-      child: FutureBuilder(
-        future: _boardList,
-        builder: (context, snapshot) {
-          var noticeData = snapshot.data;
-          if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot.hasError) {
-              return Center(
-                child: Text(
-                  '${snapshot.error} occurred nnnnnnnnnnn',
-                  style: TextStyle(fontSize: 18),
-                ),
-              ); // if we got our data
-            } else if (snapshot.hasData && snapshot.data != null) {
-              print('FutureBuilder FutureBuilder');
-              return ListView.separated(
-                primary: false,
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                // itemCount: snapshot.data!.length,
-                itemCount: min(itemsPerPage, noticeData!.length - currentPage * itemsPerPage),
-                itemBuilder: (BuildContext context, int index) {
-                  int itemIndex =
-                      (noticeData!.length - 1) - (currentPage * itemsPerPage + index); // 내림차순으로 항목의 실제 인덱스 계산
-                  return Container(
-                    padding: const EdgeInsets.all(1),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                  "${noticeData![itemIndex].id} ",
-                                  style: Theme.of(context).textTheme.titleSmall,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      SizedBox(
-                                        width: deviceWidth * 0.8,
-                                        child: InkWell(
-                                          onTap: () {
-                                            String newPath = '${widget.detailPath}?itemIndex=${itemIndex+1}';
-                                            context.go(newPath);
-                                          },
-                                          child: Align(
-                                            alignment: Alignment.centerLeft,
-                                            child: Text(
-                                              "${noticeData![itemIndex].title} ",
-                                              overflow: TextOverflow.fade,
-                                              maxLines: 1,
-                                              softWrap: false,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(0, 20, 0, 8),
+        child: FutureBuilder(
+          future: _boardList,
+          builder: (context, snapshot) {
+            var noticeData = snapshot.data;
+            if (snapshot.connectionState == ConnectionState.done) {
+              if (snapshot.hasError) {
+                return Center(
+                  child: Text(
+                    '${snapshot.error} occurred nnnnnnnnnnn',
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                ); // if we got our data
+              } else if (snapshot.hasData && snapshot.data != null) {
+                print('FutureBuilder FutureBuilder');
+                return ListView.separated(
+                  primary: false,
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  // itemCount: snapshot.data!.length,
+                  itemCount: min(itemsPerPage, noticeData!.length - currentPage * itemsPerPage),
+                  itemBuilder: (BuildContext context, int index) {
+                    int itemIndex =
+                        (noticeData!.length - 1) - (currentPage * itemsPerPage + index); // 내림차순으로 항목의 실제 인덱스 계산
+                    return Container(
+                      padding: const EdgeInsets.all(1),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(
+                                    "${noticeData![itemIndex].id} ",
+                                    style: Theme.of(context).textTheme.titleSmall,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        SizedBox(
+                                          width: deviceWidth * 0.8,
+                                          child: InkWell(
+                                            onTap: () {
+                                              String newPath = '${widget.detailPath}?itemIndex=${itemIndex+1}';
+                                              context.go(newPath);
+                                            },
+                                            child: Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: Text(
+                                                "${noticeData![itemIndex].title} ",
+                                                overflow: TextOverflow.fade,
+                                                maxLines: 1,
+                                                softWrap: false,
+                                              ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                      SizedBox(
-                                        width: deviceWidth * 0.7,
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: <Widget>[
-                                            Text(
-                                              // "${snapshot.data![index].created_at}",
-                                              DateUtil.formatDate(noticeData![itemIndex].created_at),
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .labelSmall!
-                                                  .copyWith(color: Colors.black54),
-                                            ),
-                                            Text(
-                                              snapshot.data![itemIndex].nickname,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .labelSmall!
-                                                  .copyWith(color: Colors.black54),
-                                            ),
-                                          ],
+                                        SizedBox(
+                                          width: deviceWidth * 0.3,
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: <Widget>[
+                                              Text(
+                                                // "${snapshot.data![index].created_at}",
+                                                DateUtil.formatDate(noticeData![itemIndex].created_at),
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .labelSmall!
+                                                    .copyWith(color: Colors.black54),
+                                              ),
+                                              Text(
+                                                snapshot.data![itemIndex].nickname,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .labelSmall!
+                                                    .copyWith(color: Colors.black54),
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                            Column(
-                              children: <Widget>[
-                                SizedBox(
-                                  width: deviceWidth * 0.1,
-                                  child: Text(
-                                    "사진",
-                                    style: Theme.of(context).textTheme.labelSmall!.copyWith(color: Colors.black54),
+                                ],
+                              ),
+                              Column(
+                                children: <Widget>[
+                                  SizedBox(
+                                    width: deviceWidth * 0.2,
+                                    child: Text(
+                                      "사진",
+                                      style: Theme.of(context).textTheme.labelSmall!.copyWith(color: Colors.black54),
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  );
-                },
-                separatorBuilder: (BuildContext context, int index) => const Divider(),
-              );
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  separatorBuilder: (BuildContext context, int index) => const Divider(),
+                );
+              }
             }
-          }
-          return const Center(
-            child: CircularProgressIndicator(
-              strokeWidth: 10,
-            ),
-          );
-        },
+            return const Center(
+              child: CircularProgressIndicator(
+                strokeWidth: 10,
+              ),
+            );
+          },
+        ),
       ),
     );
   }
@@ -511,7 +514,7 @@ class NoticeState extends State<Notice> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: currentPage == 0
               ? null
               : () {
@@ -674,7 +677,7 @@ class NoticeDetailsScreenState extends State<NoticeDetailsScreen> {
                   padding: const EdgeInsets.fromLTRB(8, 50, 8, 8),
                   child: Column(
                     children: [
-                      Text(
+                      SelectableText(
                         noticeData!.title,
                         style: Theme.of(context).textTheme.displayMedium,
                       ),
@@ -699,7 +702,7 @@ class NoticeDetailsScreenState extends State<NoticeDetailsScreen> {
                                         Text('NO: ${noticeData?.id}', style: const TextStyle(color: Colors.grey)),
                                       ],
                                     ),
-                                    Text(noticeData?.nickname ?? 'No nickname',
+                                    SelectableText(noticeData?.nickname ?? 'No nickname',
                                         style: const TextStyle(color: Colors.grey)),
                                     Text(DateUtil.formatDate(noticeData!.created_at),
                                         style: const TextStyle(color: Colors.grey)),
@@ -712,7 +715,7 @@ class NoticeDetailsScreenState extends State<NoticeDetailsScreen> {
                                   width: ResponsiveWidth.getResponsiveWidth(context),
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
-                                    child: Text(
+                                    child: SelectableText(
                                       noticeData!.content,
                                       style: const TextStyle(
                                         height: 1.5, // 줄 간격을 글자 크기의 1.5배로 설정
