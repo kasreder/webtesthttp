@@ -146,12 +146,9 @@ class ScaffoldWithNavigationRail extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           // 버튼을 눌렀을 때 실행할 동작
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const PostWrite()),
-          );
+          context.go('/PostWrite');
           print('플로팅 액션 버튼이 눌렸습니다.');
-        }, // 버튼 안에 아이콘 설정
+        }, // 버튼 안에 아이콘 설정 // 버튼 안에 아이콘 설정
         backgroundColor: Colors.blue,
         child: const Icon(Icons.add), // 버튼의 배경색
       ),
