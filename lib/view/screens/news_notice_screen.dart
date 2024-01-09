@@ -431,7 +431,7 @@ class NoticeState extends State<Notice> {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: <Widget>[
                                         SizedBox(
-                                          width: deviceWidth * 0.8,
+                                          width: deviceWidth * 0.6,
                                           child: InkWell(
                                             onTap: () {
                                               String newPath = '${widget.detailPath}?itemIndex=${itemIndex+1}';
@@ -441,7 +441,7 @@ class NoticeState extends State<Notice> {
                                               alignment: Alignment.centerLeft,
                                               child: Text(
                                                 "${noticeData![itemIndex].title} ",
-                                                overflow: TextOverflow.fade,
+                                                overflow: TextOverflow.ellipsis,
                                                 maxLines: 1,
                                                 softWrap: false,
                                               ),
@@ -449,7 +449,7 @@ class NoticeState extends State<Notice> {
                                           ),
                                         ),
                                         SizedBox(
-                                          width: deviceWidth * 0.3,
+                                          width: deviceWidth * 0.5,
                                           child: Row(
                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: <Widget>[

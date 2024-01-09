@@ -8,6 +8,8 @@ import 'package:refltter/view/screens/login.dart';
 import 'package:refltter/view/screens/news_notice_screen.dart';
 import 'package:refltter/view/widgets/navigation.dart';
 
+import 'view/screens/post_write_screen.dart';
+
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigator1Key = GlobalKey<NavigatorState>(debugLabel: 'Home');
 final _shellNavigator2Key = GlobalKey<NavigatorState>(debugLabel: '새소식');
@@ -37,12 +39,12 @@ final goRouter = GoRouter(
             GoRoute(
               path: '/',
               pageBuilder: (context, state) => const NoTransitionPage(
-                child: RootScreen(label: 'COSMOSX 월컴', detailsPath: '/main/details'),
+                child: RootScreen(label: 'COSMOSX 월컴', detailsPath: '/PostWrite'),
               ),
               routes: [
                 GoRoute(
-                  path: 'details',
-                  builder: (context, state) => const DetailsScreen(label: 'A아님감'),
+                  path: 'PostWrite',
+                  builder: (context, state) => const PostWrite(),
                 ),
               ],
             ),
