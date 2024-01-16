@@ -1,6 +1,7 @@
-
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'package:flutter/material.dart';
-
+import '../../util/post_menu.dart';
 import '../../util/responsive_width.dart';
 import '../widgets/appbar.dart';
 import '../widgets/drawer.dart';
@@ -16,14 +17,59 @@ class PostWrite extends StatefulWidget {
 class _PostWriteState extends State<PostWrite> {
   final _formKey = GlobalKey<FormState>();
   String? selectedMenu;
-  String? selectedBoard;
-  final List<String> menuOptions = ['Menu 1', 'Menu 2', 'Menu 3'];
-  final List<String> boardOptions = ['Board 1', 'Board 2', 'Board 3'];
+  String? selectedSubMenu;
+  final List<String> menuOptions = getMenuOptions();
+  String? subMenuId;
+  List<String> subMenus = [];
 
+  final TextEditingController _nicknameController = TextEditingController();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _contentController = TextEditingController();
-  final TextEditingController _nicknameController = TextEditingController();
-  final TextEditingController _linkController = TextEditingController();
+  // final TextEditingController _linkController = TextEditingController();
+
+  void _handleSubmit() async {
+    if (_formKey.currentState!.validate()) {
+      // 폼이 유효할 때 실행되는 코드
+
+      // 각 TextFormField의 값 가져오기
+      String nickname = _nicknameController.text;
+      String? board = subMenuId;
+      String title = _titleController.text;
+      String content = _contentController.text;
+      // String link = _linkController.text;
+      // 서버에 데이터 전송
+      const String url = "https://terraforming.info/main/";
+      final response = await http.post(Uri.parse(url), // 서버의 API 엔드포인트
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'nickname': nickname,
+          "board_id": board as String,
+          'title': title,
+          'content': content,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        // 성공적으로 데이터가 전송된 경우
+        print('Data sent to the server successfully');
+        Navigator.pop(context);
+      } else {
+        // 데이터 전송 실패
+        print('Failed to send data');
+      }
+
+      // 값들을 처리하는 로직
+      // 예: 서버에 데이터 전송, 화면 이동 등
+      // 여기서는 콘솔에 출력하는 예제를 보여줍니다.
+      print('닉네임: $nickname');
+      // print('보드: $board');
+      print('제목: $title');
+      print('내용: $content');
+      // print('링크: $link');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +92,13 @@ class _PostWriteState extends State<PostWrite> {
                   DropdownButtonFormField<String>(
                     value: selectedMenu,
                     hint: Text('메뉴 선택'),
-                    onChanged: (newValue) => setState(() => selectedMenu = newValue),
+                    onChanged: (newValue) {
+                      setState(() {
+                        selectedMenu = newValue;
+                        subMenus = getSubMenus(selectedMenu!);
+                        selectedSubMenu = null; // 서브메뉴 초기화
+                      });
+                    },
                     items: menuOptions.map((menu) {
                       return DropdownMenuItem(
                         value: menu,
@@ -58,10 +110,17 @@ class _PostWriteState extends State<PostWrite> {
 
                   // 게시판 선택
                   DropdownButtonFormField<String>(
-                    value: selectedBoard,
+                    value: selectedSubMenu,
                     hint: Text('게시판 선택'),
-                    onChanged: (newValue) => setState(() => selectedBoard = newValue),
-                    items: boardOptions.map((board) {
+                    onChanged: (newValue) {
+                      setState(() {
+                        selectedSubMenu = newValue;
+                        subMenuId = getSubMenuId(selectedSubMenu ?? '');
+                        // 이제 'subMenuId'를 사용하여 필요한 작업을 수행할 수 있습니다.
+                        // 예: 서버에 데이터 전송, 상태 업데이트 등
+                      });
+                    },
+                    items: subMenus.map((board) {
                       return DropdownMenuItem(
                         value: board,
                         child: Text(board),
@@ -104,21 +163,16 @@ class _PostWriteState extends State<PostWrite> {
                   ),
                   SizedBox(height: 16),
 
-                  // 링크
-                  TextFormField(
-                    controller: _linkController,
-                    decoration: InputDecoration(labelText: '링크'),
-                  ),
-                  SizedBox(height: 16),
+                  // // 링크
+                  // TextFormField(
+                  //   controller: _linkController,
+                  //   decoration: InputDecoration(labelText: '링크'),
+                  // ),
+                  // SizedBox(height: 16),
 
                   // 작성 버튼
                   ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        // 폼 데이터 처리
-                        // 예: 서버에 데이터 전송
-                      }
-                    },
+                    onPressed: _handleSubmit,
                     child: Text('작성하기'),
                   ),
 
