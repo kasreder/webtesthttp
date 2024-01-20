@@ -587,7 +587,7 @@ class NoticeDetailsScreenState extends State<NoticeDetailsScreen> {
     if (itemIndex == null) {
       throw Exception('No item index provided');
     }
-    return "https://terraforming.info/main/$itemIndex";
+    return "https://terraforming.info/main/notice/$itemIndex";
   }
 
   Future<PostWithComments> _getNoticeData() async {

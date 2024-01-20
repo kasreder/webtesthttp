@@ -53,15 +53,8 @@ final goRouter = GoRouter(
         StatefulShellBranch(
           navigatorKey: _shellNavigator2Key,
           routes: [
-            // Shopping Cart
             GoRoute(
               path: '/nwn',
-              redirect: (context,state) {
-                if (state.location  == '/nwn') {
-                  return '/nwn/news';
-                }
-                return null;
-              },
               pageBuilder: (context, state) => const NoTransitionPage(
                 child: NewsNoticeMain(label: 'nwn', detailsPath: '/nwn/news'),
               ),
@@ -73,18 +66,16 @@ final goRouter = GoRouter(
                 GoRoute(
                   path: 'notice',
                   pageBuilder: (context, state) => const NoTransitionPage(
-                  child: Notice(label: 'Notice', detailPath: '/nwn/notice/noticeread',),
+                    child: Notice(label: 'Notice', detailPath: '/nwn/notice/:noticeId'),
                   ),
                   routes: [
                     GoRoute(
-                      path: 'noticeread',
+                      path: ':noticeId',
                       builder: (BuildContext context, GoRouterState state) {
-                        print('Current path: ${state.location}');
-                        print('Query parameters: ${state.queryParameters}');
-                        final id = state.queryParameters['itemIndex'];
+                        final noticeId = state.pathParameters['noticeId'];
                         return NoticeDetailsScreen(
                           label: 'COSMOSX > 공지게시판',
-                          itemIndex: id,
+                          itemIndex: noticeId,
                         );
                       },
                     ),
