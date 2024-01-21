@@ -5,10 +5,18 @@ part 'BoardP.g.dart';
 @JsonSerializable()
 class BoardP {
   /// The generated code assumes these values exist in JSON.
-  final String title, content, created_at, nickname;
-  final int id;
+  final String title, content, created_at, nickname, bname;
+  final int id, user_id,board_id;
 
-  BoardP({required this.title, required this.content, required this.id, required this.nickname, required this.created_at});
+  BoardP(
+      {required this.title,
+      required this.content,
+      required this.id,
+      required this.nickname,
+      required this.created_at,
+      required this.bname,
+      required this.user_id,
+      required this.board_id});
 
   /// Connect the generated [_$PersonFromJson] function to the `fromJson`
   /// factory.

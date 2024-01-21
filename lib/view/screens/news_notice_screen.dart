@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 
 import '../../models/BoardP.dart';
 import '../../models/CommentP.dart';
@@ -64,16 +63,18 @@ class NewsNoticeMainState extends State<NewsNoticeMain> {
   }
 }
 
-/// The details screen for either the A or B screen.
+/// 공지사항 게시판
 class News extends StatefulWidget {
   /// Constructs a [DetailsScreen].
   const News({
     required this.label,
+    required this.detailPath,
     Key? key,
   }) : super(key: key);
 
   /// The label to display in the center of the screen.
   final String label;
+  final String detailPath;
 
   @override
   State<StatefulWidget> createState() => NewsState();
@@ -95,13 +96,13 @@ class NewsState extends State<News> {
     print('initState initState');
   }
 
-  final String url = "https://terraforming.info/main/";
+  final String url = "https://terraforming.info/main/news";
   Future<List<BoardP>> _getBoardList() async {
     final http.Response res = await http.get(Uri.parse(url));
     if (res.statusCode == 200) {
       final List<BoardP> result = jsonDecode(res.body).map<BoardP>((data) => BoardP.fromJson(data)).toList();
       totalItems = result.length;
-      print(result.length);
+      print(result);
       return result;
     } else {
       throw Exception('Failed to load boards');
@@ -111,12 +112,12 @@ class NewsState extends State<News> {
   @override
   Widget build(BuildContext context) {
     final deviceWidth = ResponsiveWidth.getResponsiveWidth(context);
-    print('width★★★★ : ${MediaQuery.of(context).size.width}');
+    print('width★★★★ : ${ResponsiveWidth.getResponsiveWidth(context)}');
     int startPage = max(0, currentPage - 2);
     int endPage = min((totalItems / itemsPerPage).ceil(), currentPage + 2);
     return Scaffold(
       appBar: BaseAppBar(
-        title: "새소식(뉴스)",
+        title: "새소식(공지사항)",
         appBar: AppBar(),
       ),
       //라우팅쪽 label
@@ -126,7 +127,7 @@ class NewsState extends State<News> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              const Text("업계동향, 신기술, 기사"),
+              const Text("홈페이지 관련소식, 제휴 및 기타 공지"),
               buildNewsExpanded(deviceWidth),
               buildNewsRow(startPage, endPage),
             ],
@@ -138,6 +139,7 @@ class NewsState extends State<News> {
     );
   }
 
+  //하단 작성글 보는 리스트
   Expanded buildNewsExpanded(double deviceWidth) {
     return Expanded(
       child: Padding(
@@ -145,12 +147,12 @@ class NewsState extends State<News> {
         child: FutureBuilder(
           future: _boardList,
           builder: (context, snapshot) {
-            var newsDate = snapshot.data;
+            var NewsData = snapshot.data;
             if (snapshot.connectionState == ConnectionState.done) {
               if (snapshot.hasError) {
                 return Center(
-                  child: Text(
-                    '${snapshot.error} occurred',
+                  child: SelectableText(
+                    '${snapshot.error} occurred nnnnnnnnnnn',
                     style: const TextStyle(fontSize: 18),
                   ),
                 ); // if we got our data
@@ -161,10 +163,10 @@ class NewsState extends State<News> {
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
                   // itemCount: snapshot.data!.length,
-                  itemCount: min(itemsPerPage, snapshot.data!.length - currentPage * itemsPerPage),
+                  itemCount: min(itemsPerPage, NewsData!.length - currentPage * itemsPerPage),
                   itemBuilder: (BuildContext context, int index) {
                     int itemIndex =
-                        (snapshot.data!.length - 1) - (currentPage * itemsPerPage + index); // 내림차순으로 항목의 실제 인덱스 계산
+                        (NewsData!.length - 1) - (currentPage * itemsPerPage + index); // 내림차순으로 항목의 실제 인덱스 계산
                     return Container(
                       padding: const EdgeInsets.all(1),
                       child: Column(
@@ -177,7 +179,7 @@ class NewsState extends State<News> {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: <Widget>[
                                   Text(
-                                    "${newsDate![itemIndex].id} ",
+                                    "${NewsData![itemIndex].id} ",
                                     style: Theme.of(context).textTheme.titleSmall,
                                   ),
                                   Padding(
@@ -186,29 +188,38 @@ class NewsState extends State<News> {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: <Widget>[
                                         SizedBox(
-                                          width: deviceWidth * 0.8,
-                                          child: Text(
-                                            "${newsDate![itemIndex].title} ",
-                                            overflow: TextOverflow.fade,
-                                            maxLines: 1,
-                                            softWrap: false,
+                                          width: deviceWidth * 0.6,
+                                          child: InkWell(
+                                            onTap: () {
+                                              String newPath = '${widget.detailPath}?itemIndex=${itemIndex+1}';
+                                              context.go(newPath);
+                                            },
+                                            child: Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: Text(
+                                                "${NewsData![itemIndex].title} ",
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 1,
+                                                softWrap: false,
+                                              ),
+                                            ),
                                           ),
                                         ),
                                         SizedBox(
-                                          width: deviceWidth * 0.7,
+                                          width: deviceWidth * 0.5,
                                           child: Row(
                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: <Widget>[
                                               Text(
                                                 // "${snapshot.data![index].created_at}",
-                                                DateUtil.formatDate(newsDate![itemIndex].created_at),
+                                                DateUtil.formatDate(NewsData![itemIndex].created_at),
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .labelSmall!
                                                     .copyWith(color: Colors.black54),
                                               ),
                                               Text(
-                                                newsDate![itemIndex].nickname,
+                                                snapshot.data![itemIndex].nickname,
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .labelSmall!
@@ -225,7 +236,7 @@ class NewsState extends State<News> {
                               Column(
                                 children: <Widget>[
                                   SizedBox(
-                                    width: deviceWidth * 0.1,
+                                    width: deviceWidth * 0.2,
                                     child: Text(
                                       "사진",
                                       style: Theme.of(context).textTheme.labelSmall!.copyWith(color: Colors.black54),
@@ -254,12 +265,13 @@ class NewsState extends State<News> {
     );
   }
 
+  //하단 페이지 숫자
   Row buildNewsRow(int startPage, int endPage) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: currentPage == 0
               ? null
               : () {
@@ -305,6 +317,283 @@ class NewsState extends State<News> {
     );
   }
 }
+
+class NewsDetailsScreen extends StatefulWidget {
+  final String label;
+  final String? itemIndex;
+
+  const NewsDetailsScreen({
+    Key? key,
+    required this.label,
+    this.itemIndex, // 옵셔널로 변경
+  }) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => NewsDetailsScreenState();
+}
+
+/// The state for DetailsScreen
+class NewsDetailsScreenState extends State<NewsDetailsScreen> {
+  // Future<Model>? _NewsList;
+  // Future<List<CommentP>>? _NewsPostComment;
+  Future<PostWithComments>? _NewsPostComment;
+
+  String constructUrl() {
+    // `widget.itemIndex` 또는 쿼리 파라미터를 사용하여 URL 구성
+    final itemIndex = widget.itemIndex ?? Uri.base.queryParameters['itemIndex'];
+    if (itemIndex == null) {
+      throw Exception('No item index provided');
+    }
+    return "https://terraforming.info/main/$itemIndex";
+  }
+
+  Future<PostWithComments> _getNewsData() async {
+    final url = constructUrl();
+    final http.Response res = await http.get(Uri.parse(url));
+
+    if (res.statusCode != 200) {
+      throw Exception('Failed to load data from $url');
+    }
+
+    final jsonData = jsonDecode(res.body) as Map<String, dynamic>;
+    final post = Model.fromJson(jsonData['post']);
+    final comments = (jsonData['comments'] as List).map<CommentP>((data) => CommentP.fromJson(data)).toList();
+
+    return PostWithComments(post: post, comments: comments);
+  }
+
+  // Future<Model> _getNewspost() async {
+  //   final url = constructUrl();
+  //   final http.Response res = await http.get(Uri.parse(url));
+  //   if (res.statusCode == 200) {
+  //     return Model.fromJson(jsonDecode(res.body));
+  //   } else {
+  //     throw Exception('Post Failed to load data from $url');
+  //   }
+  // }
+  //
+  // Future<List<CommentP>> _getNewscomment() async {
+  //   final url = constructUrl();
+  //   final http.Response res = await http.get(Uri.parse(url));
+  //   if (res.statusCode == 200) {
+  //     // JSON 객체에서 "comments" 키에 해당하는 배열을 추출
+  //     final List<dynamic> jsonList = (jsonDecode(res.body) as Map<String, dynamic>)['comments'] ?? [];
+  //     final List<CommentP> result = jsonList.map<CommentP>((data) => CommentP.fromJson(data)).toList();
+  //     return result; // 변환된 리스트를 반환
+  //   } else {
+  //     throw Exception('Failed to load data from $url');
+  //   }
+  // }
+
+  @override
+  void initState() {
+    super.initState();
+    print('initState aaaaa');
+    // print('initState $_NewsList');
+    // _NewsList = _getNewspost();
+    // _NewsPostComment = _getNewscomment();
+    _NewsPostComment = _getNewsData();
+    // print('initState after $_NewsList');
+    print('initState _getNewscomment $_NewsPostComment');
+    // url = "https://terraforming.info/main/${widget.itemIndex ?? Uri.base.queryParameters["itemIndex"]}";
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.label),
+      ),
+      body: FutureBuilder<PostWithComments>(
+          future: _NewsPostComment,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState != ConnectionState.done) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (snapshot.hasError) {
+              return Center(
+                child: Column(
+                  children: [
+                    Text(
+                      '${snapshot.error} occurred',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  ],
+                ),
+              );
+            }
+            if (!snapshot.hasData || snapshot.data == null) {
+              return const Center(child: Text('No data available'));
+            }
+            var NewsData = snapshot.data?.post;
+            var commentData = snapshot.data!.comments;
+
+            return ListView(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 50, 8, 8),
+                  child: Column(
+                    children: [
+                      SelectableText(
+                        NewsData!.title,
+                        style: Theme.of(context).textTheme.displayMedium,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: [
+                            Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        const Padding(
+                                          padding: EdgeInsets.fromLTRB(8, 10, 8, 10),
+                                          child: Icon(
+                                            Icons.add_chart,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                        Text('NO: ${NewsData?.id}', style: const TextStyle(color: Colors.grey)),
+                                      ],
+                                    ),
+                                    SelectableText(NewsData?.nickname ?? 'No nickname',
+                                        style: const TextStyle(color: Colors.grey)),
+                                    Text(DateUtil.formatDate(NewsData!.created_at),
+                                        style: const TextStyle(color: Colors.grey)),
+                                  ],
+                                ),
+                                SizedBox(
+                                    width: ResponsiveWidth.getResponsiveWidth(context),
+                                    child: const Divider(color: Colors.black54, thickness: 0.3)),
+                                SizedBox(
+                                  width: ResponsiveWidth.getResponsiveWidth(context),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: SelectableText(
+                                      NewsData!.content,
+                                      style: const TextStyle(
+                                        height: 1.5, // 줄 간격을 글자 크기의 1.5배로 설정
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                    width: ResponsiveWidth.getResponsiveWidth(context),
+                                    child: const Divider(color: Colors.black54, thickness: 0.3)),
+                                SizedBox(
+                                  width: ResponsiveWidth.getResponsiveWidth(context),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: <Widget>[
+                                      // 구글 로그인 버튼
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: ElevatedButton(
+                                          onPressed: () {
+                                            // 구글 로그인 처리
+                                          },
+                                          child: Text('구글'),
+                                        ),
+                                      ),
+                                      // 네이버 로그인 버튼
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: ElevatedButton(
+                                          onPressed: () {
+                                            // 네이버 로그인 처리
+                                          },
+                                          child: Text('네이버'),
+                                        ),
+                                      ),
+                                      // 카카오톡 로그인 버튼
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: OutlinedButton(
+                                          onPressed: () {
+                                            // 카카오톡 로그인 처리
+                                          },
+                                          child: Text('카카오톡'),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: _buildCommentListNews(commentData: commentData),
+                )
+              ],
+            );
+          }),
+      drawer: const BaseDrawer(),
+    );
+  }
+}
+
+class _buildCommentListNews extends StatelessWidget {
+  const _buildCommentListNews({
+    super.key,
+    required this.commentData,
+  });
+
+  final List<CommentP> commentData;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min, // 자식 크기에 맞춤
+      children: commentData
+          .map((comment) => Padding(
+        padding: const EdgeInsets.fromLTRB(50, 4, 0, 4),
+        child: SizedBox(
+          width: ResponsiveWidth.getResponsiveWidth(context),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  const Icon(Icons.subdirectory_arrow_left_outlined, color: Colors.grey, size: 15),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(comment.comment_author_nickname ?? 'No nickname',
+                        style: TextStyle(color: Colors.grey, fontSize: 15)),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(DateUtil.formatDate(comment.comment_created_at),
+                        style: TextStyle(color: Colors.grey, fontSize: 15)),
+                  ),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
+                child: Text(comment.comment_content),
+              ),
+            ],
+          ),
+        ),
+      ))
+          .toList(),
+    );
+  }
+}
+
+//  notice
+//
+//
+//
+
 
 /// 공지사항 게시판
 class Notice extends StatefulWidget {
@@ -587,7 +876,7 @@ class NoticeDetailsScreenState extends State<NoticeDetailsScreen> {
     if (itemIndex == null) {
       throw Exception('No item index provided');
     }
-    return "https://terraforming.info/main/notice/$itemIndex";
+    return "https://terraforming.info/main/$itemIndex";
   }
 
   Future<PostWithComments> _getNoticeData() async {
