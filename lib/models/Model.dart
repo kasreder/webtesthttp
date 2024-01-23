@@ -26,7 +26,13 @@ class Model {
   final String title, content, created_at, nickname;
   final int id;
 
-  Model({required this.title, required this.content, required this.id, required this.nickname, required this.created_at});
+  Model({
+    required this.title,
+    required this.content,
+    required this.id,
+    required this.nickname,
+    required this.created_at,
+  });
 
   /// Connect the generated [_$PersonFromJson] function to the `fromJson`
   /// factory.

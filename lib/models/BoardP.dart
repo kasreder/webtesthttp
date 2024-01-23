@@ -6,7 +6,7 @@ part 'BoardP.g.dart';
 class BoardP {
   /// The generated code assumes these values exist in JSON.
   final String title, content, created_at, nickname, bname;
-  final int id, user_id,board_id;
+  final int id;
 
   BoardP(
       {required this.title,
@@ -14,9 +14,7 @@ class BoardP {
       required this.id,
       required this.nickname,
       required this.created_at,
-      required this.bname,
-      required this.user_id,
-      required this.board_id});
+      required this.bname});
 
   /// Connect the generated [_$PersonFromJson] function to the `fromJson`
   /// factory.

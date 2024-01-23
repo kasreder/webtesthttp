@@ -1,13 +1,11 @@
 import 'dart:convert';
 import 'dart:math';
 import 'dart:core';
-import 'dart:async';
 
 // import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
 
 import '../../models/BoardP.dart';
 import '../../models/CommentP.dart';
@@ -16,6 +14,7 @@ import '../../models/PostWithComments.dart';
 import '../../util/date_util.dart';
 import '../../util/responsive_width.dart';
 import '../widgets/appbar.dart';
+import '../widgets/comment_write_widget.dart';
 import '../widgets/drawer.dart';
 
 /// Widget for the root/initial pages in the bottom navigation bar.
@@ -98,11 +97,15 @@ class NewsState extends State<News> {
 
   final String url = "https://terraforming.info/main/news";
   Future<List<BoardP>> _getBoardList() async {
+    print('initState ddddddddddddd');
     final http.Response res = await http.get(Uri.parse(url));
+    print('initState eeeeeeeeeeeeeee');
     if (res.statusCode == 200) {
+      print('initState fffffffffffffff');
       final List<BoardP> result = jsonDecode(res.body).map<BoardP>((data) => BoardP.fromJson(data)).toList();
       totalItems = result.length;
-      print(result);
+      print('initState sddsdsdsd');
+      print('initState sddsdsdsd');
       return result;
     } else {
       throw Exception('Failed to load boards');
@@ -149,6 +152,7 @@ class NewsState extends State<News> {
           builder: (context, snapshot) {
             var NewsData = snapshot.data;
             if (snapshot.connectionState == ConnectionState.done) {
+              print('initState gggggggggggggggg');
               if (snapshot.hasError) {
                 return Center(
                   child: SelectableText(
@@ -162,11 +166,12 @@ class NewsState extends State<News> {
                   primary: false,
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
-                  // itemCount: snapshot.data!.length,
                   itemCount: min(itemsPerPage, NewsData!.length - currentPage * itemsPerPage),
                   itemBuilder: (BuildContext context, int index) {
-                    int itemIndex =
-                        (NewsData!.length - 1) - (currentPage * itemsPerPage + index); // 내림차순으로 항목의 실제 인덱스 계산
+                    int itemIndex = (NewsData!.length - 1) - (currentPage * itemsPerPage + index); // 내림차순으로 항목의 실제 인덱스 계산
+                    int totalItemsCount = NewsData!.length; // 내림차순으로 news로 검색된 인덱스 계산
+                    int listOrderNumber = totalItemsCount - (currentPage * itemsPerPage + index);
+
                     return Container(
                       padding: const EdgeInsets.all(1),
                       child: Column(
@@ -179,7 +184,8 @@ class NewsState extends State<News> {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: <Widget>[
                                   Text(
-                                    "${NewsData![itemIndex].id} ",
+                                    // "${NewsData![itemIndex].id} ",
+                                    '$listOrderNumber',
                                     style: Theme.of(context).textTheme.titleSmall,
                                   ),
                                   Padding(
@@ -191,7 +197,7 @@ class NewsState extends State<News> {
                                           width: deviceWidth * 0.6,
                                           child: InkWell(
                                             onTap: () {
-                                              String newPath = '${widget.detailPath}?itemIndex=${itemIndex+1}';
+                                              String newPath = '${widget.detailPath}?itemIndex=${NewsData![itemIndex].id}';
                                               context.go(newPath);
                                             },
                                             child: Align(
@@ -344,7 +350,7 @@ class NewsDetailsScreenState extends State<NewsDetailsScreen> {
     if (itemIndex == null) {
       throw Exception('No item index provided');
     }
-    return "https://terraforming.info/main/$itemIndex";
+    return "https://terraforming.info/main/news/$itemIndex";
   }
 
   Future<PostWithComments> _getNewsData() async {
@@ -414,9 +420,10 @@ class NewsDetailsScreenState extends State<NewsDetailsScreen> {
               return Center(
                 child: Column(
                   children: [
-                    Text(
-                      '${snapshot.error} occurred',
-                      style: TextStyle(fontSize: 18),
+                    SelectableText(
+                      '${snapshot.error} occurred111',
+                      style: const TextStyle(fontSize: 18),
+
                     ),
                   ],
                 ),
@@ -452,11 +459,13 @@ class NewsDetailsScreenState extends State<NewsDetailsScreen> {
                                         const Padding(
                                           padding: EdgeInsets.fromLTRB(8, 10, 8, 10),
                                           child: Icon(
-                                            Icons.add_chart,
+                                            // Icons.add_chart,
+                                            Icons.import_contacts_sharp,
                                             color: Colors.grey,
                                           ),
                                         ),
                                         Text('NO: ${NewsData?.id}', style: const TextStyle(color: Colors.grey)),
+                                        Text('ddddddddddddddddddddddddddddddddddddddddddd'),
                                       ],
                                     ),
                                     SelectableText(NewsData?.nickname ?? 'No nickname',
@@ -518,6 +527,7 @@ class NewsDetailsScreenState extends State<NewsDetailsScreen> {
                                           child: Text('카카오톡'),
                                         ),
                                       ),
+                                      Text('ddddddddddddddddddddddddddddddddddddddddddd'),
                                     ],
                                   ),
                                 ),
@@ -529,9 +539,23 @@ class NewsDetailsScreenState extends State<NewsDetailsScreen> {
                     ],
                   ),
                 ),
+                const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      CommentWrite(),
+                      Text('ddddddddddddddddddddddddddddddddddddddddddd'),
+                    ],
+                  ),
+                ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: _buildCommentListNews(commentData: commentData),
+                  child: Row(
+                    children: [
+                      _buildCommentListNews(commentData: commentData),
+                      Text('ddddddddddddddddddddddddddddddddddddddddddd'),
+                    ],
+                  ),
                 )
               ],
             );
@@ -628,7 +652,7 @@ class NoticeState extends State<Notice> {
     print('initState initState');
   }
 
-  final String url = "https://terraforming.info/main/";
+  final String url = "https://terraforming.info/main/notice";
   Future<List<BoardP>> _getBoardList() async {
     final http.Response res = await http.get(Uri.parse(url));
     if (res.statusCode == 200) {
@@ -876,7 +900,7 @@ class NoticeDetailsScreenState extends State<NoticeDetailsScreen> {
     if (itemIndex == null) {
       throw Exception('No item index provided');
     }
-    return "https://terraforming.info/main/$itemIndex";
+    return "https://terraforming.info/main/notice/$itemIndex";
   }
 
   Future<PostWithComments> _getNoticeData() async {
@@ -887,11 +911,21 @@ class NoticeDetailsScreenState extends State<NoticeDetailsScreen> {
       throw Exception('Failed to load data from $url');
     }
 
-    final jsonData = jsonDecode(res.body) as Map<String, dynamic>;
-    final post = Model.fromJson(jsonData['post']);
-    final comments = (jsonData['comments'] as List).map<CommentP>((data) => CommentP.fromJson(data)).toList();
+    final jsonData = jsonDecode(res.body);
 
-    return PostWithComments(post: post, comments: comments);
+    // 'post' 키가 있는지 확인하고, 있으면 Map으로 변환
+    if (jsonData['post'] != null && jsonData['post'] is Map<String, dynamic>) {
+      final post = Model.fromJson(jsonData['post']);
+
+      // 'comments' 키가 있는지 확인하고, 있으면 List로 변환
+      final comments = jsonData['comments'] != null && jsonData['comments'] is List
+          ? (jsonData['comments'] as List).map<CommentP>((data) => CommentP.fromJson(data)).toList()
+          : <CommentP>[];
+
+      return PostWithComments(post: post, comments: comments);
+    } else {
+      throw Exception('Invalid data format');
+    }
   }
 
   // Future<Model> _getnoticepost() async {
@@ -946,8 +980,8 @@ class NoticeDetailsScreenState extends State<NoticeDetailsScreen> {
               return Center(
                 child: Column(
                   children: [
-                    Text(
-                      '${snapshot.error} occurred',
+                    SelectableText(
+                      '${snapshot.error} occurred222',
                       style: TextStyle(fontSize: 18),
                     ),
                   ],

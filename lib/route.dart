@@ -69,11 +69,11 @@ final goRouter = GoRouter(
                 GoRoute(
                   path: 'news',
                   pageBuilder: (context, state) => const NoTransitionPage(
-                    child: News(label: 'News', detailPath: '/nwn/news/ ',),
+                    child: News(label: 'News', detailPath: '/nwn/news/s',),
                   ),
                   routes: [
                     GoRoute(
-                      path: ':S',
+                      path: 's',
                       builder: (BuildContext context, GoRouterState state) {
                         print('Current path: ${state.location}');
                         print('Query parameters: ${state.queryParameters}');

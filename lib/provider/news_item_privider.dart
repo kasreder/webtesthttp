@@ -14,9 +14,7 @@ class NewsProvider extends ChangeNotifier {
         id: boardP.id,
         nickname: boardP.nickname,
         created_at: boardP.created_at,
-        bname: boardP.bname,
-        user_id: boardP.user_id,
-        board_id: boardP.board_id);
+        bname: boardP.bname);
     notifyListeners();
   }
 }
