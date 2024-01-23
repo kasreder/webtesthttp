@@ -367,6 +367,18 @@ class NewsDetailsScreenState extends State<NewsDetailsScreen> {
 
     return PostWithComments(post: post, comments: comments);
   }
+  final TextEditingController _commentController = TextEditingController();
+
+  Future<void> _submitComment() async {
+    // TODO: 여기에 댓글 제출 로직을 구현하세요.
+    // 예: 서버에 댓글 데이터를 전송
+    String comment = _commentController.text;
+    if (comment.isNotEmpty) {
+      // 서버에 댓글 전송 로직
+      print("댓글 전송: $comment");
+      _commentController.clear(); // 댓글 필드 초기화
+    }
+  }
 
   // Future<Model> _getNewspost() async {
   //   final url = constructUrl();
@@ -435,103 +447,107 @@ class NewsDetailsScreenState extends State<NewsDetailsScreen> {
             var NewsData = snapshot.data?.post;
             var commentData = snapshot.data!.comments;
 
-            return ListView(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(8, 50, 8, 8),
-                  child: Column(
-                    children: [
-                      SelectableText(
-                        NewsData!.title,
-                        style: Theme.of(context).textTheme.displayMedium,
-                      ),
+            return Column(
+              children:<Widget>[
+                Expanded(
+                  child: ListView(
+                    children: <Widget>[
                       Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.fromLTRB(8, 50, 8, 8),
                         child: Column(
                           children: [
-                            Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        const Padding(
-                                          padding: EdgeInsets.fromLTRB(8, 10, 8, 10),
-                                          child: Icon(
-                                            // Icons.add_chart,
-                                            Icons.import_contacts_sharp,
-                                            color: Colors.grey,
+                            SelectableText(
+                              NewsData!.title,
+                              style: Theme.of(context).textTheme.displayMedium,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                children: [
+                                  Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              const Padding(
+                                                padding: EdgeInsets.fromLTRB(8, 10, 8, 10),
+                                                child: Icon(
+                                                  // Icons.add_chart,
+                                                  Icons.import_contacts_sharp,
+                                                  color: Colors.grey,
+                                                ),
+                                              ),
+                                              Text('NO: ${NewsData?.id}', style: const TextStyle(color: Colors.grey)),
+                                            ],
+                                          ),
+                                          SelectableText(NewsData?.nickname ?? 'No nickname',
+                                              style: const TextStyle(color: Colors.grey)),
+                                          Text(DateUtil.formatDate(NewsData!.created_at),
+                                              style: const TextStyle(color: Colors.grey)),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                          width: ResponsiveWidth.getResponsiveWidth(context),
+                                          child: const Divider(color: Colors.black54, thickness: 0.3)),
+                                      SizedBox(
+                                        width: ResponsiveWidth.getResponsiveWidth(context),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: SelectableText(
+                                            NewsData!.content,
+                                            style: const TextStyle(
+                                              height: 1.5, // 줄 간격을 글자 크기의 1.5배로 설정
+                                            ),
                                           ),
                                         ),
-                                        Text('NO: ${NewsData?.id}', style: const TextStyle(color: Colors.grey)),
-                                        Text('ddddddddddddddddddddddddddddddddddddddddddd'),
-                                      ],
-                                    ),
-                                    SelectableText(NewsData?.nickname ?? 'No nickname',
-                                        style: const TextStyle(color: Colors.grey)),
-                                    Text(DateUtil.formatDate(NewsData!.created_at),
-                                        style: const TextStyle(color: Colors.grey)),
-                                  ],
-                                ),
-                                SizedBox(
-                                    width: ResponsiveWidth.getResponsiveWidth(context),
-                                    child: const Divider(color: Colors.black54, thickness: 0.3)),
-                                SizedBox(
-                                  width: ResponsiveWidth.getResponsiveWidth(context),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: SelectableText(
-                                      NewsData!.content,
-                                      style: const TextStyle(
-                                        height: 1.5, // 줄 간격을 글자 크기의 1.5배로 설정
                                       ),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                    width: ResponsiveWidth.getResponsiveWidth(context),
-                                    child: const Divider(color: Colors.black54, thickness: 0.3)),
-                                SizedBox(
-                                  width: ResponsiveWidth.getResponsiveWidth(context),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: <Widget>[
-                                      // 구글 로그인 버튼
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: ElevatedButton(
-                                          onPressed: () {
-                                            // 구글 로그인 처리
-                                          },
-                                          child: Text('구글'),
+                                      SizedBox(
+                                          width: ResponsiveWidth.getResponsiveWidth(context),
+                                          child: const Divider(color: Colors.black54, thickness: 0.3)),
+                                      SizedBox(
+                                        width: ResponsiveWidth.getResponsiveWidth(context),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.end,
+                                          children: <Widget>[
+                                            // 구글 로그인 버튼
+                                            Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: ElevatedButton(
+                                                onPressed: () {
+                                                  // 구글 로그인 처리
+                                                },
+                                                child: Text('구글'),
+                                              ),
+                                            ),
+                                            // 네이버 로그인 버튼
+                                            Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: ElevatedButton(
+                                                onPressed: () {
+                                                  // 네이버 로그인 처리
+                                                },
+                                                child: Text('네이버'),
+                                              ),
+                                            ),
+                                            // 카카오톡 로그인 버튼
+                                            Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: OutlinedButton(
+                                                onPressed: () {
+                                                  // 카카오톡 로그인 처리
+                                                },
+                                                child: Text('카카오톡'),
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                      // 네이버 로그인 버튼
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: ElevatedButton(
-                                          onPressed: () {
-                                            // 네이버 로그인 처리
-                                          },
-                                          child: Text('네이버'),
-                                        ),
-                                      ),
-                                      // 카카오톡 로그인 버튼
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: OutlinedButton(
-                                          onPressed: () {
-                                            // 카카오톡 로그인 처리
-                                          },
-                                          child: Text('카카오톡'),
-                                        ),
-                                      ),
-                                      Text('ddddddddddddddddddddddddddddddddddddddddddd'),
                                     ],
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ],
                         ),
@@ -539,24 +555,27 @@ class NewsDetailsScreenState extends State<NewsDetailsScreen> {
                     ],
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.all(8.0),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                   child: Row(
-                    children: [
-                      CommentWrite(),
-                      Text('ddddddddddddddddddddddddddddddddddddddddddd'),
+                    children: <Widget>[
+                      Expanded(
+                        child: TextFormField(
+                          controller: _commentController,
+                          decoration: InputDecoration(
+                            hintText: '댓글을 입력하세요',
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 8.0),
+                      ElevatedButton(
+                        onPressed: _submitComment,
+                        child: Text('댓글 작성'),
+                      ),
                     ],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      _buildCommentListNews(commentData: commentData),
-                      Text('ddddddddddddddddddddddddddddddddddddddddddd'),
-                    ],
-                  ),
-                )
               ],
             );
           }),

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:refltter/view/screens/post_write_screen.dart';
 
+import 'floting_action_widget.dart';
+
 
 // Stateful navigation based on:
 // https://github.com/flutter/packages/blob/main/packages/go_router/example/lib/stateful_shell_route.dart
@@ -74,15 +76,7 @@ class ScaffoldWithNavigationBar extends StatelessWidget {
         ],
         onDestinationSelected: onDestinationSelected,
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // 버튼을 눌렀을 때 실행할 동작
-          context.go('/PostWrite');
-          print('플로팅 액션 버튼이 눌렸습니다.');
-        }, // 버튼 안에 아이콘 설정
-        backgroundColor: Colors.blue,
-        child: const Icon(Icons.add), // 버튼의 배경색
-      ),
+      floatingActionButton: const NaviFloatingAction()
     );
   }
 }
@@ -143,15 +137,7 @@ class ScaffoldWithNavigationRail extends StatelessWidget {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // 버튼을 눌렀을 때 실행할 동작
-          context.go('/PostWrite');
-          print('플로팅 액션 버튼이 눌렸습니다.');
-        }, // 버튼 안에 아이콘 설정 // 버튼 안에 아이콘 설정
-        backgroundColor: Colors.blue,
-        child: const Icon(Icons.add), // 버튼의 배경색
-      ),
+      floatingActionButton: const NaviFloatingAction()
     );
   }
 }

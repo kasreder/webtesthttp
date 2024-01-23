@@ -78,7 +78,7 @@ final goRouter = GoRouter(
                         print('Current path: ${state.location}');
                         print('Query parameters: ${state.queryParameters}');
                         final id = state.queryParameters['itemIndex'];
-                        return NoticeDetailsScreen(
+                        return NewsDetailsScreen(
                           label: 'COSMOSX > 공지게시판',
                           itemIndex: id,
                         );
