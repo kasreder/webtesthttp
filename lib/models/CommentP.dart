@@ -21,8 +21,21 @@ class CommentP {
   /// The generated code assumes these values exist in JSON.
   final String comment_content, comment_created_at, comment_author_nickname;
   final int comment_id;
+  final int? parent_comment_order;
+  final int? parent_comment_id;
 
-  CommentP({required this.comment_content, required this.comment_id, required this.comment_author_nickname, required this.comment_created_at});
+  CommentP({
+    required this.comment_content,
+    required this.comment_id,
+    required this.comment_author_nickname,
+    required this.comment_created_at,
+    required this.parent_comment_id,
+    required this.parent_comment_order,
+  });
+
+  String toString() {
+    return 'CommentP(commentId: $comment_id, commentParentId: $parent_comment_id, ODER: $parent_comment_order)';
+  }
 
   /// Connect the generated [_$PersonFromJson] function to the `fromJson`
   /// factory.

@@ -3,6 +3,7 @@ import 'dart:math';
 import 'dart:core';
 
 // import 'package:data_table_2/data_table_2.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
@@ -369,17 +370,6 @@ class NewsDetailsScreenState extends State<NewsDetailsScreen> {
   }
   final TextEditingController _commentController = TextEditingController();
 
-  Future<void> _submitComment() async {
-    // TODO: 여기에 댓글 제출 로직을 구현하세요.
-    // 예: 서버에 댓글 데이터를 전송
-    String comment = _commentController.text;
-    if (comment.isNotEmpty) {
-      // 서버에 댓글 전송 로직
-      print("댓글 전송: $comment");
-      _commentController.clear(); // 댓글 필드 초기화
-    }
-  }
-
   // Future<Model> _getNewspost() async {
   //   final url = constructUrl();
   //   final http.Response res = await http.get(Uri.parse(url));
@@ -552,26 +542,9 @@ class NewsDetailsScreenState extends State<NewsDetailsScreen> {
                           ],
                         ),
                       ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: TextFormField(
-                          controller: _commentController,
-                          decoration: InputDecoration(
-                            hintText: '댓글을 입력하세요',
-                            border: OutlineInputBorder(),
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 8.0),
-                      ElevatedButton(
-                        onPressed: _submitComment,
-                        child: Text('댓글 작성'),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: _buildCommentListNews(commentData: commentData),
                       ),
                     ],
                   ),
@@ -584,7 +557,7 @@ class NewsDetailsScreenState extends State<NewsDetailsScreen> {
   }
 }
 
-class _buildCommentListNews extends StatelessWidget {
+class _buildCommentListNews extends StatefulWidget {
   const _buildCommentListNews({
     super.key,
     required this.commentData,
@@ -593,45 +566,155 @@ class _buildCommentListNews extends StatelessWidget {
   final List<CommentP> commentData;
 
   @override
+  State<_buildCommentListNews> createState() => _buildCommentListNewsState();
+}
+
+class _buildCommentListNewsState extends State<_buildCommentListNews> {
+  Map<int, bool> _showReplyField = {};
+//ddddddddddddddddd
+  @override
+
   Widget build(BuildContext context) {
+    // 댓글을 일반 댓글과 대댓글로 분류
+    List<CommentP> primaryComments = [];
+    Map<int, List<CommentP>> replyComments = {};
+
+    for (var comment in widget.commentData) {
+      print(comment);
+      if (comment.parent_comment_id == null) {
+        primaryComments.add(comment);
+        replyComments[comment.comment_id] = [];
+        print('replyCommentsreplyCommentsreplyCommentsreplyCommentsreplyCommentsreplyComments');
+        print(comment.parent_comment_id);
+      } else {
+        replyComments[comment.parent_comment_id]?.add(comment);
+        print('comment_parent_idcomment_parent_idcomment_parent_idcomment_parent_idcomment_parent_id');
+        print(comment.parent_comment_id);
+      }
+    }
+
+
     return Column(
       mainAxisSize: MainAxisSize.min, // 자식 크기에 맞춤
-      children: commentData
-          .map((comment) => Padding(
-        padding: const EdgeInsets.fromLTRB(50, 4, 0, 4),
-        child: SizedBox(
-          width: ResponsiveWidth.getResponsiveWidth(context),
-          child: Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SizedBox(
+            width: ResponsiveWidth.getResponsiveWidth(context),
+            child: TextFormField(
+              decoration: InputDecoration(
+                hintText: '댓글을 작성하세요',
+                border: OutlineInputBorder(),
+                suffixIcon: IconButton(
+                  icon: const Icon(Icons.safety_check),
+                  onPressed: () {
+                    // TODO: 댓글 작성 로직 구현
+                  },
+                ),
+              ),
+            ),
+          ),
+        ),
+        ...primaryComments.map((comment) {
+          return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
+              buildComment(comment),
+              ...?replyComments[comment.comment_id]?.map(buildComment),
+            ],
+          );
+        }).toList(),
+      ],
+    );
+  }
+
+  Widget buildComment(CommentP comment) {
+    final int commentId = comment.comment_id;
+    double paddingValue = ((comment.parent_comment_order ?? 0)+1)*19;
+
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 4.0),
+      child: SizedBox(
+        width : ResponsiveWidth.getResponsiveWidth(context),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // 댓글 작성자와 내용
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: paddingValue*1),
+              child: Row(
                 children: [
-                  const Icon(Icons.subdirectory_arrow_left_outlined, color: Colors.grey, size: 15),
+                  // const Icon(Icons.reply_sharp, color: Colors.grey, size: 15),
+                  buildIcon(paddingValue),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text(comment.comment_author_nickname ?? 'No nickname',
-                        style: TextStyle(color: Colors.grey, fontSize: 15)),
+                    child: Text(
+                        comment.comment_author_nickname ?? 'No nickname',
+                        style: const TextStyle(color: Colors.grey, fontSize: 15)),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text(DateUtil.formatDate(comment.comment_created_at),
-                        style: TextStyle(color: Colors.grey, fontSize: 15)),
+                    child: Text(
+                        DateUtil.formatDate(comment.comment_created_at),
+                        style: const TextStyle(color: Colors.grey, fontSize: 15)),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.subdirectory_arrow_left_outlined, color: Colors.grey, size: 15),
+                    onPressed: () {
+                      setState(() {
+                        _showReplyField[commentId] = !_showReplyField[commentId]!;
+                      });
+                    },
                   ),
                 ],
               ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 1.0, left: paddingValue*1),
+              child: Text(comment.comment_content),
+            ),
+
+            // 대댓글 입력 필드를 표시하는 버튼 (선택적)
+            if (_showReplyField[commentId] != null && _showReplyField[commentId]!)
               Padding(
-                padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
-                child: Text(comment.comment_content),
+                padding: const EdgeInsets.only(top: 8.0),
+                child: TextFormField(
+                  decoration: InputDecoration(
+                    hintText: '대댓글을 작성하세요',
+                    border: OutlineInputBorder(),
+                    suffixIcon: IconButton(
+                      icon: Icon(Icons.send),
+                      onPressed: () {
+                        // TODO: 대댓글 작성 로직 구현
+                      },
+                    ),
+                  ),
+                ),
               ),
-            ],
-          ),
+          ],
         ),
-      ))
-          .toList(),
+      ),
     );
   }
-}
 
+  Widget buildIcon(double paddingValue) {
+    IconData iconData;
+
+    if (paddingValue < 20) {
+      iconData = Icons.reply;
+    // } else if (paddingValue >= 40 && paddingValue < 60) {
+    //   iconData = Icons.arrow_upward;
+    // } else if (paddingValue >= 60) {
+    //   iconData = Icons.arrow_up;
+    } else {
+      iconData = Icons.arrow_upward; // 기본값 설정
+    }
+
+    return Icon(iconData, color: Colors.grey, size: 15);
+  }
+
+  
+}
 //  notice
 //
 //
