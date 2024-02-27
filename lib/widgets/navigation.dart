@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:refltter/view/screens/post_write_screen.dart';
 
-import 'floting_action_widget.dart';
+import '../view/widgets/floting_action_widget.dart';
 
 
 // Stateful navigation based on:
@@ -76,7 +75,7 @@ class ScaffoldWithNavigationBar extends StatelessWidget {
         ],
         onDestinationSelected: onDestinationSelected,
       ),
-      // floatingActionButton: const NaviFloatingAction()
+      floatingActionButton: const NaviFloatingAction()
     );
   }
 }
@@ -137,7 +136,7 @@ class ScaffoldWithNavigationRail extends StatelessWidget {
           ),
         ],
       ),
-      // floatingActionButton: const NaviFloatingAction()
+      floatingActionButton: const NaviFloatingAction()
     );
   }
 }

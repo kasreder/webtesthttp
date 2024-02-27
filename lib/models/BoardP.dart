@@ -16,6 +16,10 @@ class BoardP {
       required this.created_at,
       required this.bname});
 
+  String toString() {
+    return 'BoardP(id:$id, title: $title, nickname: $nickname,created_at: $created_at,bname:$bname )';
+  }
+
   /// Connect the generated [_$PersonFromJson] function to the `fromJson`
   /// factory.
   factory BoardP.fromJson(Map<String, dynamic> json) => _$BoardPFromJson(json);

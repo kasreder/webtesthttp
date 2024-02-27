@@ -1,7 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:refltter/view/screens/news_notice_screen.dart';
 import '../../util/post_menu.dart';
 import '../widgets/appbar.dart';
 import '../widgets/drawer.dart';
@@ -57,14 +56,17 @@ class _PostWriteState extends State<PostWrite> {
         print('Data sent to the server successfully');
         // Navigator.pop(context);
         // html.window.location.reload();
-        // Navigator.of(context).popUntil((route) => route.isFirst);
-        Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => News(label: 'Newss', detailPath: '/nwn/news/s',)));
+        Navigator.of(context).popUntil((route) => route.isFirst);
       } else {
         // 데이터 전송 실패
         print('Failed to send data');
       }
+
+      // 값들을 처리하는 로직
+      // 예: 서버에 데이터 전송, 화면 이동 등
+      // 여기서는 콘솔에 출력하는 예제를 보여줍니다.
       print('닉네임: $nickname');
-      print('보드: $board');
+      // print('보드: $board');
       print('제목: $title');
       print('내용: $content');
       // print('링크: $link');

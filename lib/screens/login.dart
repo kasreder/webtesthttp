@@ -61,10 +61,39 @@ class _LoginState extends State<Login> {
               ),
             ),
             // 소셜 로그인 버튼
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Login3Button(),
+                // 구글 로그인 버튼
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // 구글 로그인 처리
+                    },
+                    child: const Text('구글'),
+                  ),
+                ),
+                // 네이버 로그인 버튼
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // 네이버 로그인 처리
+                    },
+                    child: const Text('네이버'),
+                  ),
+                ),
+                // 카카오톡 로그인 버튼
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: OutlinedButton(
+                    onPressed: () {
+                      // 카카오톡 로그인 처리
+                    },
+                    child: const Text('카카오톡'),
+                  ),
+                ),
               ],
             ),
             // 비밀번호 찾기 링크
@@ -138,43 +167,3 @@ class DetailsScreenState extends State<DetailsScreen_a> {
     );
   }
 }
-
-class Login3Button extends StatelessWidget {
-  const Login3Button({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ElevatedButton(
-            onPressed: () {
-              // 네이버 로그인 처리
-            },
-            child: const Text('네이버'),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ElevatedButton(
-            onPressed: () {
-              // 네이버 로그인 처리
-            },
-            child: const Text('네이버'),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ElevatedButton(
-            onPressed: () {
-              // 네이버 로그인 처리
-            },
-            child: const Text('네이버'),
-          ),
-        ),
-      ],
-    );
-  }
-}
-

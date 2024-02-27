@@ -23,6 +23,7 @@ class CommentP {
   final int comment_id;
   final int? parent_comment_order;
   final int? parent_comment_id;
+  final String? post_id;
 
   CommentP({
     required this.comment_content,
@@ -31,11 +32,17 @@ class CommentP {
     required this.comment_created_at,
     required this.parent_comment_id,
     required this.parent_comment_order,
+    required this.post_id,
   });
 
-  String toString() {
-    return 'CommentP(commentId: $comment_id, commentParentId: $parent_comment_id, ODER: $parent_comment_order)';
-  }
+  // String toString() {
+  //   return 'CommentP(commentId: $comment_id, '
+  //       'commentParentId: $parent_comment_id, '
+  //       'ODER: $parent_comment_order, '
+  //       'nickname:$comment_author_nickname,'
+  //       'comment_created_at:$comment_created_at'
+  //       'post_id:$post_id';
+  // }
 
   /// Connect the generated [_$PersonFromJson] function to the `fromJson`
   /// factory.

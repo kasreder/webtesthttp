@@ -13,6 +13,7 @@ CommentP _$CommentPFromJson(Map<String, dynamic> json) => CommentP(
       comment_created_at: json['comment_created_at'] as String,
       parent_comment_id: json['parent_comment_id'] as int?,
       parent_comment_order: json['parent_comment_order'] as int?,
+      post_id: json['post_id'] as String?,
     );
 
 Map<String, dynamic> _$CommentPToJson(CommentP instance) => <String, dynamic>{
@@ -22,4 +23,5 @@ Map<String, dynamic> _$CommentPToJson(CommentP instance) => <String, dynamic>{
       'comment_id': instance.comment_id,
       'parent_comment_order': instance.parent_comment_order,
       'parent_comment_id': instance.parent_comment_id,
+      'post_id': instance.post_id,
     };

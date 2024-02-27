@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
+import 'package:refltter/provider/post_provider.dart';
 // import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'package:refltter/provider/noticeModel.dart';
@@ -7,12 +9,14 @@ import 'package:provider/provider.dart';
 
 void main() {
   // turn off the # in the URLs on the web111
+  KakaoSdk.init(nativeAppKey: 'ddcbf01fdd26bb7b767ca2a47a1dffac');
   setPathUrlStrategy();
   // usePathUrlStrategy();
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => NoticeProvider()),
+        ChangeNotifierProvider(create: (context) => ItemIndexProvider()),
       ],
       child: const MyApp(),
     ),
