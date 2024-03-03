@@ -276,10 +276,10 @@ class NewsState extends State<News> {
           onPressed: currentPage == 0
               ? null
               : () {
-                  setState(() {
-                    currentPage--;
-                  });
-                },
+            setState(() {
+              currentPage--;
+            });
+          },
         ),
         for (int i = startPage; i < endPage; i++)
           Padding(
@@ -309,10 +309,10 @@ class NewsState extends State<News> {
           onPressed: currentPage == (totalItems / itemsPerPage).ceil() - 1
               ? null
               : () {
-                  setState(() {
-                    currentPage++;
-                  });
-                },
+            setState(() {
+              currentPage++;
+            });
+          },
         ),
       ],
     );
@@ -554,7 +554,8 @@ class _buildCommentListNews extends StatefulWidget {
 }
 
 class _buildCommentListNewsState extends State<_buildCommentListNews> {
-  FocusNode _focusNode = FocusNode();
+  FocusNode _commentFocusNode  = FocusNode();
+  FocusNode _replyFocusNode = FocusNode();
   Map<int, bool> _showReplyField = {};
   TextEditingController _newCommentController = TextEditingController(); // 새 댓글을 위한 컨트롤러
   Map<int, TextEditingController> _replyControllers = {};
@@ -628,8 +629,9 @@ class _buildCommentListNewsState extends State<_buildCommentListNews> {
       //   comment_created_at: jsonResponse['comment_created_at'].toString(),
       // );
       print('Comment sent successfully+++++setState');
-      html.window.location.reload();
+      // html.window.location.reload();
       // Navigator.pushReplacementNamed(context, '/main/news/$itemIndex');
+      Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => const NewsDetailsScreen(label: 'NewsSS',)));
     } else {
       print('Failed to send comment');
       // 실패 처리...
@@ -639,21 +641,27 @@ class _buildCommentListNewsState extends State<_buildCommentListNews> {
   @override
   void initState() {
     super.initState();
-    _focusNode.addListener(_handleFocusChange);
+    _commentFocusNode .addListener(_handleFocusChange);
+    _replyFocusNode  .addListener(_handleFocusChange);
   }
 
   void _handleFocusChange() {
-    if (_focusNode.hasFocus) {
+    // 댓글 또는 대댓글 입력 필드 중 하나라도 포커스를 가지고 있으면 플로팅 액션 버튼을 숨깁니다.
+    if (_commentFocusNode.hasFocus || _replyFocusNode.hasFocus) {
       widget.updateVisibility(false);
     } else {
+      // 두 입력 필드 모두 포커스를 잃었을 때만 플로팅 액션 버튼을 다시 표시합니다.
       widget.updateVisibility(true);
     }
   }
 
+
   @override
   void dispose() {
-    _focusNode.removeListener(_handleFocusChange);
-    _focusNode.dispose();
+    _commentFocusNode.removeListener(_handleFocusChange);
+    _commentFocusNode.dispose();
+    _replyFocusNode.removeListener(_handleFocusChange);
+    _replyFocusNode.dispose();
     super.dispose();
   }
 
@@ -688,7 +696,7 @@ class _buildCommentListNewsState extends State<_buildCommentListNews> {
                   SizedBox(
                     width: ResponsiveWidth.getResponsiveWidth(context),
                     child: TextFormField(
-                      focusNode: _focusNode,
+                      focusNode: _commentFocusNode ,
                       controller: _newCommentController,
                       decoration: InputDecoration(
                         hintText: '댓글을 작성하세요',
@@ -762,7 +770,14 @@ class _buildCommentListNewsState extends State<_buildCommentListNews> {
                     icon: const Icon(Icons.subdirectory_arrow_left_outlined, color: Colors.grey, size: 15),
                     onPressed: () {
                       setState(() {
-                        _showReplyField[comment.comment_id] = !(_showReplyField[comment.comment_id] ?? false);
+                        // 현재 클릭된 대댓글 입력 필드의 상태를 토글합니다.
+                        bool currentFieldState = !(_showReplyField[comment.comment_id] ?? false);
+                        // 모든 대댓글 입력 필드를 닫습니다.
+                        _showReplyField.keys.forEach((key) {
+                          _showReplyField[key] = false;
+                        });
+                        // 클릭된 대댓글 입력 필드만 상태를 업데이트합니다.
+                        _showReplyField[comment.comment_id] = currentFieldState;
                       });
                     },
                   ),
@@ -782,7 +797,7 @@ class _buildCommentListNewsState extends State<_buildCommentListNews> {
                   child: SizedBox(
                     width: deviceWidth * 0.8, // 너비 설정
                     child: TextFormField(
-                      focusNode: _focusNode,
+                      focusNode: _replyFocusNode ,
                       controller: _replyControllers[comment.comment_id] ??=
                           TextEditingController(text: '@${comment.comment_author_nickname} '),
                       decoration: InputDecoration(
@@ -816,7 +831,7 @@ class _buildCommentListNewsState extends State<_buildCommentListNews> {
                               // html.window.location.reload();
                             } else {
                               // 실제로 내용을 입력하지 않았을 경우 경고 메시지 표시
-                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('댓글을 입력해주세요.')));
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('대 댓글을 입력해주세요.')));
                             }
                           },
                         ),
@@ -1060,10 +1075,10 @@ class NoticeState extends State<Notice> {
           onPressed: currentPage == 0
               ? null
               : () {
-                  setState(() {
-                    currentPage--;
-                  });
-                },
+            setState(() {
+              currentPage--;
+            });
+          },
         ),
         for (int i = startPage; i < endPage; i++)
           Padding(
@@ -1093,10 +1108,10 @@ class NoticeState extends State<Notice> {
           onPressed: currentPage == (totalItems / itemsPerPage).ceil() - 1
               ? null
               : () {
-                  setState(() {
-                    currentPage++;
-                  });
-                },
+            setState(() {
+              currentPage++;
+            });
+          },
         ),
       ],
     );
@@ -1350,35 +1365,35 @@ class _buildCommentList extends StatelessWidget {
       mainAxisSize: MainAxisSize.min, // 자식 크기에 맞춤
       children: commentData
           .map((comment) => Padding(
-                padding: const EdgeInsets.fromLTRB(50, 4, 0, 4),
-                child: SizedBox(
-                  width: ResponsiveWidth.getResponsiveWidth(context),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          const Icon(Icons.subdirectory_arrow_left_outlined, color: Colors.grey, size: 15),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(comment.comment_author_nickname ?? 'No nickname',
-                                style: TextStyle(color: Colors.grey, fontSize: 15)),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(DateUtil.formatDate(comment.comment_created_at),
-                                style: TextStyle(color: Colors.grey, fontSize: 15)),
-                          ),
-                        ],
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
-                        child: Text(comment.comment_content),
-                      ),
-                    ],
+        padding: const EdgeInsets.fromLTRB(50, 4, 0, 4),
+        child: SizedBox(
+          width: ResponsiveWidth.getResponsiveWidth(context),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  const Icon(Icons.subdirectory_arrow_left_outlined, color: Colors.grey, size: 15),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(comment.comment_author_nickname ?? 'No nickname',
+                        style: TextStyle(color: Colors.grey, fontSize: 15)),
                   ),
-                ),
-              ))
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(DateUtil.formatDate(comment.comment_created_at),
+                        style: TextStyle(color: Colors.grey, fontSize: 15)),
+                  ),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
+                child: Text(comment.comment_content),
+              ),
+            ],
+          ),
+        ),
+      ))
           .toList(),
     );
   }
