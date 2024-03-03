@@ -1157,7 +1157,7 @@ class NoticeDetailsScreenState extends State<NoticeDetailsScreen> {
 
     final jsonData = jsonDecode(res.body);
 
-    // 'post' 키가 있는지 확인하고, 있으면 Map으로 변환aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    // 'post' 키가 있는지 확인하고, 있으면 Map으로 변환
     if (jsonData['post'] != null && jsonData['post'] is Map<String, dynamic>) {
       final post = Model.fromJson(jsonData['post']);
 
